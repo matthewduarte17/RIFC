@@ -15,7 +15,7 @@ from .. import db
 from .. import identity as I
 from .. import recruit as R
 from ..schema import METRICS, POSITION_LABELS
-from .classify import AVAILABILITY_CLOSING, AVAILABILITY_OPENING, EVENT_TYPES
+from .classify import AVAILABILITY_CLOSING, AVAILABILITY_OPENING, EVENT_TYPES, UNCONFIRMED_TYPES
 from .clubs import ClubCatalog
 from .match import Matcher, Roster
 
@@ -191,8 +191,13 @@ def review_priority(event: dict, card: dict | None, club_shortlisted: int = 0) -
     if et in AVAILABILITY_OPENING:
         pts += 2
         factors.append(f"{EVENT_TYPES[et]}: may change his availability (needs checking)")
+    elif et in UNCONFIRMED_TYPES:
+        pass
     elif et in AVAILABILITY_CLOSING:
         factors.append(f"{EVENT_TYPES[et]}: availability update, not a lead by itself")
+    unconfirmed = et in UNCONFIRMED_TYPES
+    if unconfirmed:
+        factors.append("Roster page change only: no announcement supports it yet (unconfirmed)")
     rec = card.get("record") or {}
     mins = rec.get("minutes") or 0
     if mins >= 450:
@@ -233,9 +238,13 @@ def review_priority(event: dict, card: dict | None, club_shortlisted: int = 0) -
         factors.append("His latest season is from a partial dataset")
     if et in AVAILABILITY_CLOSING and not sl:
         pts = min(pts, 2)
+    if unconfirmed:
+        pts = min(pts, 4 if sl else 2)
     tier = "High" if pts >= 6 else "Medium" if pts >= 3 else "Low"
     if sl and tier == "Low":
         tier = "Medium"
+    if unconfirmed and tier == "High":
+        tier = "Medium"                                   # an unconfirmed page change is never top priority on its own
     return {"tier": tier, "points": pts, "factors": factors}
 
 
@@ -252,6 +261,7 @@ def inference_for(event_type: str, shortlisted: bool) -> list[str]:
                       "Not established: free agency, fee, or interest."],
         "retirement": ["He has retired or is retiring. Not a recruitment lead."],
         "loan_out": ["He is on loan: the parent club keeps his rights. Not available unless the parent club agrees."],
+        "loan_in": ["He has joined a club on loan: his parent club keeps his rights. Update where he plays; he is not available to sign unless the parent club agrees."],
         "loan_return": ["He is returning from a loan; his status with the parent club is not stated."],
         "option_exercised": ["His club kept him for the next season. This lowers the chance he is available now."],
         "extension": ["His club extended or re-signed him. Update availability: likely off the market."],
@@ -259,6 +269,10 @@ def inference_for(event_type: str, shortlisted: bool) -> list[str]:
         "signing": ["He signed with a club. Update where he is; not a lead unless it changes our view of him."],
         "club_roster_update": ["The headline says the club made roster decisions. It does not name the players we could read."],
         "performance": ["A performance or award item about a player you follow."],
+        "roster_added": ["His name now appears on the club's roster page. That is not an announcement: it may be a signing not yet announced, "
+                         "a loan, an academy call-up, or a page edit.", "Not established: that he signed, on what terms, or that he left his previous club."],
+        "roster_removed": ["His name no longer appears on the club's roster page. That is not an announcement: it may be a departure, a loan, "
+                           "a move to another list, or a page edit.", "Not established: that he left, is a free agent, or is available."],
     }
     out = list(base.get(event_type, []))
     if shortlisted and event_type in AVAILABILITY_OPENING:

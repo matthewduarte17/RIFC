@@ -91,3 +91,71 @@ cap, and discards any name that is not word for word in the article. It was test
 ## Tests
 `python -m pytest -q tests/test_monitor.py` (offline, fake internet, controlled players; plus one run over the real release
 database proving the engine's tables are unchanged). `python tests/smoke_ui.py` clicks through every page including the new ones.
+
+
+---
+
+# Wider coverage: club directory, page watching, trackers (added 20 Nov 2026)
+
+## Before you install anything: what it costs and whether the Mac must stay awake
+Nothing here is switched on by default and nothing is installed without you saying yes.
+* **Money:** none. changedetection.io is free, open-source software. There is no account, no subscription and no cloud service.
+* **Disk and time to install:** about 550 MB in its own folder (`RIFC Translation Engine/.venv-watch`), a few minutes once.
+* **It is not a background service.** It starts when a scan starts, checks each watched page once (one page at a time, about one per
+  second), and stops when the scan ends. No web address stays open. A full scan of ~45 pages takes a few minutes of your computer's time.
+* **Does the Mac need to stay awake?** Only while a scan runs, exactly like the scan itself. If the Mac is asleep at the scheduled time, the
+  scan runs when it wakes; if it is off, at your next login. It checks nothing while the Mac sleeps or is off, so it sees a roster
+  change at the next scan after the Mac is awake, never at the moment it happens. If you want checks while the lid is closed, you would
+  need a computer that stays on (not set up here, and not required).
+* **What it sends:** requests to public club and league pages, identifying itself as `RIFC-recruitment-monitor`. changedetection.io
+  normally contacts its maker once a day with an install ID and the number of watches; that is **switched off** in every run.
+* **Install, when you are ready:** `python -m engine.monitor watch setup` (it prints this same explanation and asks first). Remove it any
+  time by deleting the `.venv-watch` folder and running `watch off`.
+
+## What was added
+1. **A club directory** (`engine/monitor/club_directory.json`, shown on Monitor Status > Coverage by club): every *current* USL Championship
+   (25) and USL League One (17) club, read from the leagues' own club pages, plus the clubs the leagues list as joining later (2 and 3) kept
+   apart; and 31 MLS NEXT Pro clubs from your database. For each club it records the official website, the league-hosted News and Roster pages,
+   and **what was actually verified and when**. Verified live on 20 Nov 2026: all 42 league-hosted News pages (one of the leagues' own links was
+   broken, Brooklyn FC's, and the corrected address was verified). **Not verified:** the 42 club websites (not reachable from the build
+   environment), and every MLS NEXT Pro club URL (none is known, so none is invented).
+2. **`python -m engine.monitor directory verify`** (run it on your Mac): fetches each club website within its robots.txt rules, finds its news
+   page, roster page and feed, checks whether the roster is readable, and saves the results in your database. `directory discover` does the same
+   for MLS NEXT Pro club websites if mlsnextpro.com is reachable. Add or correct a club by hand in `data/club_sources.json`.
+3. **Page watching with changedetection.io**, only for pages that are verified readable and permitted by robots.txt: each club's league-hosted
+   News page, the two leagues' **Transactions** pages (56 and 105 items deep, far more than the 20-item feeds), and any club news or roster page that
+   `directory verify` finds readable. Only the relevant section is watched (menus, ads, cookie banners and footers are removed; timestamps,
+   counters and "ago" text are ignored). Existing feeds are unchanged and still used.
+4. **How a detected change is used.** A changed news page is read with the normal article reader (same extraction, identity matching and inbox).
+   A changed roster page is compared as a *set of player names*: only a name appearing or vanishing counts, and a page that suddenly lists
+   far fewer or more names is reported as a layout problem, never as departures.
+5. **Roster-page changes are UNCONFIRMED.** They enter the inbox with Basis = "UNCONFIRMED", can never rank High, appear in the brief only for
+   players you follow and in their own section, and become "Supported" only when a club or league announcement about the same player (within
+   45 days either side) exists. A tracker entry alone makes it "Cross-checked", never confirmed.
+6. **Independent trackers as cross-checks:** the Beyond the Ninety Substack feed (an independent writer) is configured, flagged `tracker`, and its
+   entries are stored as "Tracker (cross-check)" with their source link and a reliability note. **It is unverified**: the host was not reachable
+   from the build environment. The league Transactions pages are official, so they count as announcements, not as independent trackers.
+7. **Coverage by club** (Monitor Status): per club, what is configured and verified, last successful check, failing watches, and what is missing.
+   It is a list of what we can see, not a claim of completeness.
+
+## What is NOT covered (said plainly)
+* **The 42 league-hosted roster pages cannot be read:** they build the player list with JavaScript (an Opta widget). A plain fetch sees no
+  players. Reading them would need a browser backend (changedetection.io supports one) and access to the widget's data host; neither is installed
+  or tested. They show as "league roster page: unreadable" in the coverage table.
+* Club-website roster pages: unknown until you run `directory verify`; some will be JavaScript-drawn too.
+* MLS NEXT Pro club pages, college, and any club not listed by the leagues.
+* A page watch cannot tell a signing from a typo: that is why its changes are labelled unconfirmed.
+* The first check of a page only records its current state (a baseline); changes are reported from the second check on. The two Transactions
+  pages are the exception: their current items are read once at the first check.
+
+## Fixed in this version (found by auditing three areas)
+* **Corrections:** if an article is edited so that a player disappears, or "declined" becomes "exercised", the old event is marked WITHDRAWN
+  (kept, never deleted, your decision stays), linked to the new one, kept out of the brief except once under "Corrections", and explicit
+  correction notices in the text are flagged.
+* **Article health:** an announcement that could not be read is retried on a back-off (2, 6, 24, 48, 72, 96 hours), then given up on and
+  reported; an article that was read but yielded no players is reported; both appear in the brief and on Monitor Status instead of being silent.
+* **Morning brief:** a fresh scan no longer means no brief (the 07:15 job always writes the day's brief); the schedule's "already scanned"
+  threshold is 4 hours, not 12 (an evening scan could skip the next morning); uncertain matches are listed once, then counted, not repeated daily.
+
+## Accuracy
+See `VALIDATION_MONITOR.md` (hand-labelled real announcements; what was caught, missed and misclassified, before and after, with the caveats).

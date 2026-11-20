@@ -308,9 +308,9 @@ def merge_into(stage_root: Path, user_data: Path, release: dict, log: list) -> d
     return {"id_map": id_map, "missing": missing}
 
 
-MONITOR_FILES = ["monitor_config.json", "monitor_sources.json", "club_aliases.json"]
+MONITOR_FILES = ["monitor_config.json", "monitor_sources.json", "club_aliases.json", "club_sources.json"]
 MONITOR_SEQ = {"rm_event_seq": ("rm_events", "event_id"), "rm_item_seq": ("rm_items", "item_id"),
-               "rm_scan_seq": ("rm_scans", "scan_id")}
+               "rm_scan_seq": ("rm_scans", "scan_id"), "rm_change_seq": ("rm_watch_change", "change_id")}
 
 
 def _carry_monitor(user: dict, user_data: Path, log: list):
@@ -341,9 +341,10 @@ def _carry_monitor(user: dict, user_data: Path, log: list):
         if src.exists():
             shutil.copy2(src, Path(os.environ["RIFC_TE_HOME"]) / "data" / f)
             copied.append(f)
-    bsrc = user_data / "briefs"
-    if bsrc.exists():
-        shutil.copytree(bsrc, Path(os.environ["RIFC_TE_HOME"]) / "data" / "briefs", dirs_exist_ok=True)
+    for d in ("briefs", "watch"):                       # briefs, and the page snapshots changedetection.io keeps (so a new version does not re-baseline every page)
+        dsrc = user_data / d
+        if dsrc.exists():
+            shutil.copytree(dsrc, Path(os.environ["RIFC_TE_HOME"]) / "data" / d, dirs_exist_ok=True)
     if have or copied:
         log.append(f"Kept your recruitment monitor: {len(user.get('rm_events', []))} inbox events, "
                    f"{len(user.get('rm_event_decisions', []))} saved decisions, {len(user.get('rm_match_decisions', []))} match answers"

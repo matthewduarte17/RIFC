@@ -2,7 +2,7 @@
 
 What this does and does not do, accurately:
   * The agent runs when you are logged in. It runs once when you log in (only if the last good scan is older than
-    12 hours) and again at the chosen time each day.
+    4 hours) and again at the chosen time each day.
   * If the Mac is asleep at that time, launchd runs the missed job when the Mac wakes. If the Mac is powered off, it
     does not run until you next log in (the login run then catches up).
   * It does not run with the lid closed and the Mac asleep, and nothing runs for a user who is logged out.
@@ -27,7 +27,7 @@ def build_plist(python: str, app_dir: str, home: str, hour: int = 7, minute: int
     logs = Path(home) / "logs"
     return {
         "Label": LABEL,
-        "ProgramArguments": [python, "-m", "engine.monitor", "run", "--if-stale", "12", "--trigger", "schedule"],
+        "ProgramArguments": [python, "-m", "engine.monitor", "run", "--if-stale", "4", "--trigger", "schedule"],
         "WorkingDirectory": app_dir,
         "EnvironmentVariables": {"RIFC_TE_HOME": home, "PYTHONPATH": app_dir, "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin"},
         "StartCalendarInterval": {"Hour": int(hour), "Minute": int(minute)},

@@ -36,24 +36,20 @@ def notify(title: str, text: str):
 
 
 def cmd_run(a) -> int:
-    from .brief import build_brief
-    from .profile import load_context
-    from .scan import run_scan
-    if a.if_stale:
-        t = _last_good()
-        if t and datetime.now() - t < timedelta(hours=a.if_stale):
-            print(f"Last good scan was {t:%Y-%m-%d %H:%M}, less than {a.if_stale} hours ago. Nothing to do.")
-            return 0
-    ctx = load_context(progress=lambda m: None, with_projections=True)
-    s = run_scan(trigger=a.trigger, ctx=ctx)
-    if s.get("status") == "skipped":
+    from .daily import run_daily
+    r = run_daily(trigger=a.trigger, if_stale_hours=a.if_stale)
+    if r["scan"] == "skipped-fresh":
+        print("The last good scan is recent, so no new scan was needed." + (" Today's brief was written." if r["brief_written"] else " Today's brief already exists."))
+    if r["scan"] == "skipped":
         return 2
-    b = build_brief(ctx)
-    n = sum(len(v) for v in b["sections"].values())
-    print(f"Brief written: {n} item(s), {b['uncertain_total']} uncertain match(es), {len(b['health']['problems'])} source problem(s).")
-    if n or b["health"]["problems"]:
-        notify("RIFC recruitment brief", f"{n} item(s) to review" + (f", {len(b['health']['problems'])} source problem(s)" if b["health"]["problems"] else ""))
-    return 0 if s.get("status") in ("ok", "partial") else 1
+    b = r["brief"]
+    if b:
+        n = sum(len(v) for v in b["sections"].values())
+        probs = len(b["health"]["problems"]) + len(b["article_health"]["unread"])
+        print(f"Brief written: {n} item(s), {b['uncertain_total']} uncertain match(es), {probs} problem(s).")
+        if n or probs or b.get("corrections"):
+            notify("RIFC recruitment brief", f"{n} item(s) to review" + (f", {probs} problem(s)" if probs else ""))
+    return 0 if r["scan"] in ("ok", "partial", "skipped-fresh") else 1
 
 
 def cmd_status(a) -> int:
@@ -61,6 +57,61 @@ def cmd_status(a) -> int:
     print(store.query("SELECT scan_id, started_at, finished_at, status, trigger FROM rm_scans ORDER BY scan_id DESC LIMIT 8").to_string(index=False))
     print()
     print(store.query("SELECT source_id, last_status, last_success, consecutive_failures, items_last, last_error FROM rm_source_state ORDER BY source_id").to_string(index=False))
+    return 0
+
+
+def cmd_directory(a) -> int:
+    from . import directory as D
+    store.ensure_schema(log=lambda m: None)
+    if a.action == "build":
+        from .. import db
+        t = db.query("SELECT DISTINCT team FROM player_seasons WHERE league = 'MLS Next Pro' AND season = (SELECT MAX(season) FROM player_seasons "
+                     "WHERE league = 'MLS Next Pro')")
+        d = D.build(db_clubs={D.MLSNP: [x for x in t["team"].dropna()]})
+        D.DIRECTORY_FILE.write_text(json.dumps(d, indent=1, ensure_ascii=False))
+        print(f"Directory written: {len(d['clubs'])} clubs to {D.DIRECTORY_FILE}")
+        return 0
+    if a.action == "verify":
+        r = D.verify_all(only_league=a.league, only_club=a.club)
+        print(f"Verified {r['clubs']} clubs ({r['rows']} source records saved in your database).")
+        return 0
+    if a.action == "discover":
+        from .http import Http, Robots
+        d = D.load_directory()
+        h = Http()
+        ents = [e for e in d["clubs"] if e["league"] == D.MLSNP]
+        res = D.discover_mlsnp(h, Robots(h), ents, datetime.now())
+        user = config_dir() / D.USER_FILE
+        user.write_text(json.dumps({"clubs": [e for e in ents if e.get("website")]}, indent=1))
+        print(f"Found {res['found']} MLS NEXT Pro club websites." + (f" Problem: {res['error']}" if res["error"] else "") + " Now run: directory verify --league 'MLS Next Pro'")
+        return 0
+    df = D.coverage_table()
+    print(df.to_string(index=False, max_colwidth=60))
+    return 0
+
+
+def config_dir():
+    from .. import config
+    return config.DATA_DIR
+
+
+def cmd_watch(a) -> int:
+    from . import watch as W
+    if a.action == "setup":
+        r = W.setup(assume_yes=a.yes)
+        print(r["message"])
+        return 0 if r["ok"] else 1
+    if a.action in ("on", "off"):
+        cfg = store.load_config(); cfg.setdefault("watch", {})["enabled"] = a.action == "on"; store.save_config(cfg)
+        print(f"Page watching is {a.action}.")
+        return 0
+    if a.action == "status":
+        print(json.dumps(W.status(), indent=1))
+        print(store.query("SELECT watch_id, role, last_status, last_success, consecutive_failures, n_changes FROM rm_watch ORDER BY watch_id").to_string(index=False))
+        return 0
+    from .daily import run_daily
+    r = run_daily(trigger="manual-watch", force_brief=False)
+    print(r["scan"], (r["scan_summary"] or {}).get("watch"))
     return 0
 
 
@@ -117,6 +168,9 @@ def main(argv=None) -> int:
     sc = sub.add_parser("schedule"); sc.add_argument("action", choices=["install", "remove", "status", "offer"])
     sc.add_argument("--hour", type=int, default=7); sc.add_argument("--minute", type=int, default=15)
     e = sub.add_parser("export"); e.add_argument("path")
+    dr = sub.add_parser("directory"); dr.add_argument("action", choices=["build", "verify", "discover", "show"])
+    dr.add_argument("--league"); dr.add_argument("--club")
+    wt = sub.add_parser("watch"); wt.add_argument("action", choices=["setup", "status", "run", "on", "off"]); wt.add_argument("--yes", action="store_true")
     a = ap.parse_args(argv)
     if a.cmd == "run":
         return cmd_run(a)
@@ -148,6 +202,10 @@ def main(argv=None) -> int:
         Path(a.path).write_text(to_csv(ev))
         print(f"Wrote {len(ev)} rows to {a.path}")
         return 0
+    if a.cmd == "directory":
+        return cmd_directory(a)
+    if a.cmd == "watch":
+        return cmd_watch(a)
     if a.cmd == "schedule":
         from . import schedule as S
         from .. import config

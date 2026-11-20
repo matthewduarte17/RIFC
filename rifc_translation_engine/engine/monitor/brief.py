@@ -10,7 +10,7 @@ import pandas as pd
 
 from .. import config
 from . import store
-from .classify import AVAILABILITY_CLOSING, AVAILABILITY_OPENING, EVENT_TYPES
+from .classify import AVAILABILITY_CLOSING, AVAILABILITY_OPENING, EVENT_TYPES, UNCONFIRMED_TYPES
 from .inbox import enrich, load_events, sort_for_review
 from .profile import Ctx, inference_for
 
@@ -21,12 +21,15 @@ NEXT_STEP = {
     "departure": "Find out where he is going and under what terms; update your availability note.",
     "retirement": "No recruitment action; update your notes.",
     "loan_out": "Note the parent club holds his rights; revisit when the loan ends.",
+    "loan_in": "Note the parent club holds his rights; update where he plays and revisit when the loan ends.",
     "loan_return": "Check his status with the parent club.",
     "option_exercised": "Update his availability note: he is likely under contract next season.",
     "extension": "Update his availability note: likely off the market; decide whether to keep him on the shortlist.",
     "under_contract": "Update his availability note.",
     "signing": "Update where he is; check whether this changes his role or minutes.",
     "performance": "Watch the match or review his latest numbers.",
+    "roster_added": "Look for an announcement or ask no one yet: confirm from a public source before treating it as a signing.",
+    "roster_removed": "Look for an announcement before treating it as a departure; note the date you saw it.",
     "club_roster_update": "Open the article and check which of the club's players are named.",
 }
 
@@ -84,7 +87,28 @@ def _window_start(today: date, path=None) -> datetime:
     return pd.Timestamp(g).to_pydatetime() if pd.notna(g) else datetime.combine(today, datetime.min.time()) - timedelta(hours=36)
 
 
-def source_health(path=None, max_hours: float = 30) -> dict:
+def article_health(path=None, now: datetime | None = None, days: int = 30) -> dict:
+    """Announcements whose text was not read, or was read but yielded no players. These are the quiet misses."""
+    now = now or datetime.now()
+    d = store.query("SELECT item_id, source_id, title, url, discovered_at, health, health_note, body_attempts, body_next_try FROM rm_items "
+                    "WHERE health IN ('unread','blocked','gave_up','deferred','no_players_found') AND discovered_at >= ? ORDER BY discovered_at DESC",
+                    [now - timedelta(days=days)], path=path)
+    out = {"unread": [], "no_players": []}
+    for r in d.itertuples():
+        base = {"item_id": int(r.item_id), "title": r.title, "url": r.url, "source": r.source_id, "discovered": str(r.discovered_at)[:16]}
+        if r.health == "no_players_found":
+            out["no_players"].append(base | {"state": "read, but no player names were found"})
+        else:
+            state = {"gave_up": f"gave up after {int(r.body_attempts or 0)} attempts: {r.health_note}",
+                     "blocked": f"blocked ({r.health_note}); next try {str(r.body_next_try)[:16]}",
+                     "unread": f"could not be read ({r.health_note}); next try {str(r.body_next_try)[:16]}",
+                     "deferred": "waiting for the next scan (fetch limit)"}[r.health]
+            out["unread"].append(base | {"state": state})
+    return out
+
+
+def source_health(path=None, max_hours: float = 30, now: datetime | None = None) -> dict:
+    now = now or datetime.now()
     st = store.query("SELECT * FROM rm_source_state ORDER BY source_id", path=path)
     sc = store.query("SELECT * FROM rm_scans ORDER BY scan_id DESC LIMIT 1", path=path)
     last_ok = store.query("SELECT MAX(finished_at) t FROM rm_scans WHERE status IN ('ok','partial')", path=path)["t"].iloc[0]
@@ -92,29 +116,37 @@ def source_health(path=None, max_hours: float = 30) -> dict:
     for r in st.itertuples():
         if r.last_status in ("failed", "blocked"):
             problems.append(f"{r.name}: {r.last_status} ({r.last_error}); {r.consecutive_failures} scan(s) in a row")
-        elif r.last_success is not None and pd.notna(r.last_success) and (datetime.now() - pd.Timestamp(r.last_success).to_pydatetime()) > timedelta(hours=max_hours * 2):
+        elif r.last_success is not None and pd.notna(r.last_success) and (now - pd.Timestamp(r.last_success).to_pydatetime()) > timedelta(hours=max_hours * 2):
             problems.append(f"{r.name}: last success {str(r.last_success)[:16]}")
     stale = None
     if pd.isna(last_ok):
         stale = "No scan has completed yet."
-    elif datetime.now() - pd.Timestamp(last_ok).to_pydatetime() > timedelta(hours=max_hours):
+    elif now - pd.Timestamp(last_ok).to_pydatetime() > timedelta(hours=max_hours):
         stale = f"The last completed scan was {str(last_ok)[:16]}: older than {max_hours:.0f} hours."
     last = None if sc.empty else {"status": sc.iloc[0]["status"], "at": str(sc.iloc[0]["finished_at"] or sc.iloc[0]["started_at"])[:16]}
     return {"problems": problems, "stale": stale, "last_scan": last, "last_success": None if pd.isna(last_ok) else str(last_ok)[:16]}
 
 
-def build_brief(ctx: Ctx, today: date | None = None, path=None, save: bool = True) -> dict:
-    today = today or date.today()
+def build_brief(ctx: Ctx, today: date | None = None, path=None, save: bool = True, now: datetime | None = None) -> dict:
+    now = now or datetime.now()
+    today = today or now.date()
     since = _window_start(today, path)
     ev = load_events(path)
     ev = enrich(ev, ctx) if len(ev) else ev
-    sections: dict[str, list] = {"shortlist": [], "signals": [], "closing": [], "performance": [], "leads": []}
-    pending = 0
+    sections: dict[str, list] = {"shortlist": [], "signals": [], "closing": [], "performance": [], "leads": [], "unconfirmed": []}
+    pending, corrections = 0, []
     if len(ev):
         mon = set(ev.loc[(ev["inbox_status"] == "Monitor") & ev["uid"].notna(), "uid"])
         followed = ctx.followed() | mon
         fresh = ev[(ev["first_seen"] >= since) | (ev["updated_flag"].fillna(False) & (ev["last_seen"] >= since))]
         fresh = fresh[fresh["inbox_status"].isin(["New", "Review", "Monitor"])]
+        withdrawn = fresh[fresh["source_state"].eq("withdrawn")]
+        fresh = fresh[~fresh["source_state"].eq("withdrawn")]
+        # a correction matters only for something you could already have seen: it was first seen before this window
+        # or you acted on it
+        corrections = [{"event_id": int(r.event_id), "text": f"{r.player_text} ({r.type_label}, {r.club_text or 'club not read'}): {r.update_note} {r.correction_note or ''}".strip(),
+                        "links": _link(r.sources, 1)} for r in withdrawn.itertuples()
+                       if r.first_seen < since or bool(r.user_decided)]
         pending = int((ev["match_status"].eq("review") & ~ev["user_decided"].fillna(False)).sum())
         for r in sort_for_review(fresh).itertuples():
             uid = r.uid if isinstance(r.uid, str) else None
@@ -123,6 +155,11 @@ def build_brief(ctx: Ctx, today: date | None = None, path=None, save: bool = Tru
             if r.event_type == "club_roster_update":
                 if r.tier in ("Medium", "High"):
                     sections["signals"].append(_item(r, "signals"))
+                continue
+            if r.event_type in UNCONFIRMED_TYPES:
+                # page changes are never mixed with announcements; only players you follow, and only until supported
+                if uid and (r.shortlisted or uid in followed) and getattr(r, "confirmation", "unconfirmed") in ("unconfirmed", "cross-checked"):
+                    sections["unconfirmed"].append(_item(r, "unconfirmed"))
                 continue
             if uid and r.shortlisted:
                 sections["shortlist"].append(_item(r, "shortlist"))
@@ -136,11 +173,16 @@ def build_brief(ctx: Ctx, today: date | None = None, path=None, save: bool = Tru
             elif not uid and r.event_type in AVAILABILITY_OPENING:
                 sections["leads"].append(r)
     leads = sections.pop("leads")
-    health = source_health(path)
-    uncertain = []
+    health = source_health(path, now=now)
+    ah = article_health(path, now)
+    uncertain, older_waiting, oldest = [], 0, None
     if len(ev):
-        q = ev[(ev["match_status"] == "review") & ~ev["user_decided"].fillna(False) & ev["inbox_status"].eq("New")]
-        for r in q.head(6).itertuples():
+        q = ev[(ev["match_status"] == "review") & ~ev["user_decided"].fillna(False) & ev["inbox_status"].eq("New")
+               & ~ev["source_state"].eq("withdrawn")]
+        older = q[q["first_seen"] < since]
+        older_waiting = len(older)
+        oldest = str(older["first_seen"].min())[:10] if len(older) else None
+        for r in q[q["first_seen"] >= since].head(6).itertuples():
             cands = json.loads(r.candidates_json or "[]")
             uncertain.append({"event_id": int(r.event_id), "text": f"{r.player_text} ({r.type_label}, {r.club_text or 'club not read'}): "
                               + (", ".join(f"{c['name']} ({c['last_club']} {c['last_season']})" for c in cands[:3]) or "no candidate"),
@@ -148,7 +190,8 @@ def build_brief(ctx: Ctx, today: date | None = None, path=None, save: bool = Tru
     payload = {"date": str(today), "since": since.isoformat(timespec="minutes"), "sections": sections,
                "lead_count": len(leads), "leads": [{"name": r.player_text, "type": r.type_label, "club": r.club_text,
                                                     "links": _link(r.sources, 1)} for r in leads[:6]],
-               "uncertain": uncertain, "uncertain_total": pending, "health": health, "warnings": ctx.warnings}
+               "uncertain": uncertain, "uncertain_total": pending, "older_waiting": older_waiting, "oldest_waiting": oldest,
+               "corrections": corrections, "article_health": ah, "health": health, "warnings": ctx.warnings}
     md = render_markdown(payload)
     payload["markdown"] = md
     if save:
@@ -157,11 +200,12 @@ def build_brief(ctx: Ctx, today: date | None = None, path=None, save: bool = Tru
         (d / f"brief_{today}.md").write_text(md)
         with store.conn(path) as con:
             con.execute("DELETE FROM rm_briefs WHERE brief_date = ?", [today])
-            con.execute("INSERT INTO rm_briefs VALUES (?,?,?,?)", [today, datetime.now(), md, json.dumps({k: v for k, v in payload.items() if k != "markdown"}, default=str)])
+            con.execute("INSERT INTO rm_briefs VALUES (?,?,?,?)", [today, now, md, json.dumps({k: v for k, v in payload.items() if k != "markdown"}, default=str)])
     return payload
 
 
 TITLES = {"shortlist": "Shortlisted players", "signals": "New departure and roster signals worth reviewing",
+          "unconfirmed": "Roster page changes with no announcement yet (UNCONFIRMED)",
           "closing": "Signings and extensions affecting players you follow", "performance": "Performance news on players you follow"}
 
 
@@ -169,16 +213,16 @@ def render_markdown(p: dict) -> str:
     L = [f"# RIFC recruitment brief, {p['date']}", ""]
     h = p["health"]
     n_items = sum(len(v) for v in p["sections"].values())
-    if n_items == 0 and not p["uncertain"] and not p["lead_count"]:
+    if n_items == 0 and not p["uncertain"] and not p["lead_count"] and not p.get("corrections"):
         L.append("Nothing new needs review since the last brief.")
         L.append("")
-    for k in ("shortlist", "signals", "closing", "performance"):
+    for k in ("shortlist", "signals", "closing", "performance", "unconfirmed"):
         items = p["sections"][k]
         if not items:
             continue
         L += [f"## {TITLES[k]}", ""]
         for it in items:
-            L.append(f"**{it['title']}**" + ("  _(updated)_" if it["updated"] else ""))
+            L.append(f"**{it['title']}**" + ("  _(updated)_" if it["updated"] else "") + ("  _[UNCONFIRMED: roster page only]_" if it["section"] == "unconfirmed" else ""))
             L.append(f"- **Source says:** {it['source_says']}")
             L.append(f"- **Our records:** {it['our_records']}")
             if it["why"]:
@@ -194,11 +238,30 @@ def render_markdown(p: dict) -> str:
         for x in p["leads"]:
             L.append(f"- {x['name']}: {x['type']}" + (f", {x['club']}" if x["club"] else "") + f" ({x['links']})")
         L.append("")
-    if p["uncertain"]:
-        L += ["## Uncertain matches needing your answer", ""]
-        L.append(f"{p['uncertain_total']} announcement(s) could not be linked to one player safely. Open the Recruitment Inbox, filter 'Match needs review'.")
-        for x in p["uncertain"]:
+    if p.get("corrections"):
+        L += ["## Corrections to earlier reports", ""]
+        for x in p["corrections"]:
             L.append(f"- {x['text']} ({x['links']})")
+        L.append("")
+    if p["uncertain"] or p.get("older_waiting"):
+        L += ["## Uncertain matches needing your answer", ""]
+        if p["uncertain"]:
+            L.append(f"{len(p['uncertain'])} new announcement(s) could not be linked to one player safely. Open the Recruitment Inbox, filter 'Match needs review'.")
+            for x in p["uncertain"]:
+                L.append(f"- {x['text']} ({x['links']})")
+        if p.get("older_waiting"):
+            L.append(f"{p['older_waiting']} earlier question(s) are still waiting for your answer (oldest since {p['oldest_waiting']}); not listed again.")
+        L.append("")
+    ah = p.get("article_health") or {"unread": [], "no_players": []}
+    if ah["unread"] or ah["no_players"]:
+        L += ["## Announcements we could not fully read", "",
+              "Each of these is a relevant headline whose players we may have missed. Open the link and check by hand.", ""]
+        for x in ah["unread"][:8]:
+            L.append(f"- Could not be read: [{x['title'][:80]}]({x['url']}) ({x['source']}): {x['state']}")
+        if len(ah["unread"]) > 8:
+            L.append(f"- and {len(ah['unread']) - 8} more (Monitor Status)")
+        for x in ah["no_players"][:5]:
+            L.append(f"- Read, but no players found: [{x['title'][:80]}]({x['url']}) ({x['source']})")
         L.append("")
     attention = []
     if h["stale"]:

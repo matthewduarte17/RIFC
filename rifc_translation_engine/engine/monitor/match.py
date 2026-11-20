@@ -28,6 +28,9 @@ PARTICLES = {"de", "da", "di", "dos", "das", "do", "del", "della", "van", "von",
              "al", "bin", "ibn", "dal", "du", "mac", "mc"}
 
 
+SUFFIXES = {"jr", "sr", "ii", "iii", "iv"}
+
+
 def name_tokens(name: str) -> list[str]:
     t = strip_accents(str(name or "")).lower().replace("'", "").replace("’", "")
     t = re.sub(r"[^a-z\s\.\-]", " ", t)
@@ -44,6 +47,8 @@ def name_tokens(name: str) -> list[str]:
             toks[-1] = toks[-1][:-1] + w
         else:
             toks.append(w)
+    while len(toks) > 2 and toks[-1] in SUFFIXES:          # "Joel Garcia Jr." is Joel Garcia
+        toks.pop()
     return toks
 
 
@@ -64,6 +69,16 @@ def name_key(name: str) -> str:
 
 def surname_key(name: str) -> str:
     return _surname(name_tokens(name))
+
+
+# Given names that are well known short forms. Used only to let a name be considered; the club must still agree.
+NICKNAMES = {"gabi": "gabriel", "memo": "guillermo", "pipe": "felipe", "beto": "alberto", "nacho": "ignacio", "paco": "francisco", "pepe": "jose",
+             "quique": "enrique", "kike": "enrique", "fer": "fernando", "santi": "santiago", "nico": "nicolas", "tj": "thomas", "ben": "benjamin",
+             "alex": "alexander", "mike": "michael", "matt": "matthew", "will": "william", "bill": "william", "joe": "joseph", "josh": "joshua"}
+
+
+def _same_given(a: str, b: str) -> bool:
+    return NICKNAMES.get(a, a) == NICKNAMES.get(b, b) or NICKNAMES.get(a) == b or NICKNAMES.get(b) == a
 
 
 def name_compat(news: str, db: str) -> str | None:
@@ -91,9 +106,19 @@ def name_compat(news: str, db: str) -> str | None:
         return "initial" if n0[0] == d0[0] else None
     if n0 == d0:
         return "exact"
-    if len(n0) >= 3 and len(d0) >= 3 and (n0.startswith(d0) or d0.startswith(n0)):
+    if len(n0) >= 3 and len(d0) >= 3 and (n0.startswith(d0) or d0.startswith(n0) or _same_given(n0, d0)):
         return "prefix"
     return None
+
+
+def name_compat_variant(news: str, db: str) -> str | None:
+    """Same given name or initial and a surname that differs by a letter or two (Elmasnouy / Elmasnaouy). Never automatic."""
+    n, d = name_tokens(news), name_tokens(db)
+    if len(n) < 2 or len(d) < 2:
+        return None
+    n0, d0 = n[0], d[0]
+    ok = (len(n0) == 1 or len(d0) == 1) and n0[0] == d0[0] or n0 == d0
+    return "initial" if ok else None
 
 
 @dataclass
@@ -197,10 +222,16 @@ class Matcher:
         extra_refs = [r for r in (self.cat.lookup(x) for x in extra_clubs if x) if r is not None]
         art_refs = [r for r in (self.cat.lookup(x) for x in article_clubs if x) if r is not None and r.strength == "exact"]
         out = []
-        for uid in self.r.by_surname.get(sk, ()):
+        exact_uids = set(self.r.by_surname.get(sk, ()))
+        variant_uids = set()
+        if not exact_uids and len(sk) >= 6:
+            import difflib
+            for near in difflib.get_close_matches(sk, list(self.r.by_surname), n=3, cutoff=0.88):
+                variant_uids |= set(self.r.by_surname[near])
+        for uid in list(exact_uids) + list(variant_uids):
             best = None
             for dbn in self.r.names[uid]:
-                lvl = name_compat(name, dbn)
+                lvl = name_compat(name, dbn) if uid in exact_uids else name_compat_variant(name, dbn)
                 if lvl and (best is None or ["exact", "prefix", "initial"].index(lvl) < ["exact", "prefix", "initial"].index(best[0])):
                     best = (lvl, dbn)
             if not best:
@@ -252,6 +283,8 @@ class Matcher:
                 ok = rec["position"] in POSITION_COMPAT.get(pos_hint, {rec["position"]})
                 if not ok:
                     c.flags.append(f"Position differs: announcement says {pos_hint}, database says {rec['position']}.")
+            if uid in variant_uids:
+                c.flags.append("The surname is spelt differently in the database: confirm it is the same person.")
             pl = self.r.players.loc[uid]
             if pl.get("identity_level") in ("Uncertain", "Probable"):
                 c.flags.append(f"His own identity is flagged in the database ({pl['identity_level']}); check Identity Review.")
@@ -260,7 +293,8 @@ class Matcher:
             out.append(c)
         return out
 
-    def match(self, name: str, club_text: str | None, league_hint: str | None = None, pos_hint: str | None = None, extra_clubs=(), article_clubs=()) -> MatchResult:
+    def match(self, name: str, club_text: str | None, league_hint: str | None = None, pos_hint: str | None = None, extra_clubs=(), article_clubs=(),
+              name_only_review: bool = False) -> MatchResult:
         nk = name_key(name)
         ref = self.cat.lookup(club_text) if club_text else None
         ck = ref.key if ref else ""
@@ -293,6 +327,17 @@ class Matcher:
         ranked = sorted(cands, key=lambda c: ({"current": 0, "recent": 1, "older": 2, "article": 3, "partial": 4, "none": 5}[c.club_level],
                                               ["exact", "prefix", "initial"].index(c.name_level)))
         keep = [c for c in ranked if c.club_level != "none" or c.name_level == "exact"][:5]
+        if not keep and name_only_review:
+            # a name on a club's roster page: his recorded club can legitimately be a different one (that is the move). A
+            # compatible name with a current or recent record in our data is queued for you, never linked.
+            latest = {k: v for k, v in self.r.latest.items()}
+            recent = [c for c in ranked if c.last_season.isdigit() and latest.get(c.last_league, "0").isdigit()
+                      and int(c.last_season) >= int(latest[c.last_league]) - 1][:3]
+            if recent:
+                for c in recent:
+                    c.reasons.append("Name fits and he has a recent record in our data at another club; the page club has no link in our data. "
+                                     "This could be a move, or a different player with a similar name.")
+                return MatchResult("review", None, "Weak", ["Name only: needs your confirmation."], [c.public() for c in recent])
         if not keep:
             return MatchResult("unmatched", reasons=[f"{len(cands)} player(s) share the surname, but none fits the club "
                                                      "and none has the full name. Treated as a news lead, not a match."],

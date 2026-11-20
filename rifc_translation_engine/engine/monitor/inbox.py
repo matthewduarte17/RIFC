@@ -175,6 +175,8 @@ def to_csv(ev: pd.DataFrame) -> str:
             "SOURCE_club": r.club_text or "", "SOURCE_announced": str(r.announced_at)[:10],
             "SOURCE_quote": (src[0]["quote"] if src else r.quote or ""), "SOURCE_links": " | ".join(s["url"] for s in src),
             "SOURCE_n_sources": r.n_sources, "first_seen": str(r.first_seen)[:16],
+            "BASIS_confirmation": r.confirmation or "announced", "BASIS_supported_by_events": r.supported_by or "",
+            "BASIS_source_state": r.source_state or "current", "BASIS_correction_note": r.correction_note or "",
             # what our database records
             "DB_name": c.get("name", ""), "DB_position": c.get("position", ""), "DB_age_at_season": rec.get("age_at_season", ""),
             "DB_latest_record": f"{rec.get('league','')} {rec.get('season','')} {rec.get('team','')}".strip(),

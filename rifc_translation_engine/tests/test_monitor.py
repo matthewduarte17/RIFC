@@ -277,7 +277,9 @@ def test_changed_article_is_flagged_as_update(tmp_path):
     w, url = roster_world(body=["Alpha FC declined contract options for Juan Garcia."])
     scan(w, p)
     w.add(url, article("Alpha FC announces roster decisions", ["Alpha FC declined contract options for Juan Garcia after the playoffs."]))
-    scan(w, p)
+    scan(w, p)                                              # looked at again too soon: no extra request to the site
+    assert not bool(events(p).query("player_text == 'Juan Garcia'").iloc[0].updated_flag)
+    scan(w, p, now=NOW + timedelta(hours=13))
     e = events(p).query("player_text == 'Juan Garcia'").iloc[0]
     assert bool(e.updated_flag) and "changed" in e.update_note.lower()
 
@@ -619,7 +621,7 @@ def test_feed_parsing_rejects_non_feeds():
 def test_schedule_plist_and_non_mac_refusal():
     d = schedule.build_plist("/py", "/app dir", "/home dir", 7, 15)
     assert d["StartCalendarInterval"] == {"Hour": 7, "Minute": 15} and d["WorkingDirectory"] == "/app dir"
-    assert d["ProgramArguments"][-4:] == ["--if-stale", "12", "--trigger", "schedule"] and d["EnvironmentVariables"]["RIFC_TE_HOME"] == "/home dir"
+    assert d["ProgramArguments"][-4:] == ["--if-stale", "4", "--trigger", "schedule"] and d["EnvironmentVariables"]["RIFC_TE_HOME"] == "/home dir"
     if sys.platform != "darwin":
         existed = schedule.plist_path().exists()
         r = schedule.install("/app", str(TMP))
@@ -701,3 +703,176 @@ print(json.dumps({{'same': before == after, 'status': s['status'], 'n': len(ev),
     assert res["same"] is True, "the monitor changed the engine's own tables"
     assert res["status"] == "ok" and res["n"] >= 25 and res["matched"] >= 20
     assert res["koke"] and res["koke"][0][1] == "matched"
+
+
+# ================================================================== v2: correction handling, article health, morning brief
+def _wipe(p):
+    with store.conn(p) as con:
+        for t in ("rm_event_evidence", "rm_events", "rm_items"):
+            con.execute(f"DELETE FROM {t}")
+
+
+def one_article_world(paras, title="Alpha FC announces roster decisions", url="https://feed.test/c1"):
+    w = World()
+    w.add(FEED, rss([(title, url, NOW - timedelta(hours=3), "")]), ctype="application/xml")
+    w.add(url, article(title, paras))
+    return w, url, title
+
+
+def test_correction_that_removes_a_player_withdraws_his_event(tmp_path):
+    p = db_path(tmp_path)
+    w, url, title = one_article_world(["Alpha FC declined contract options for Juan Garcia and Adam Smith."])
+    scan(w, p)
+    assert set(events(p).player_text) == {"Juan Garcia", "Adam Smith"}
+    w.add(url, article(title, ["Alpha FC declined contract options for Juan Garcia."]))      # the club corrected the release
+    s = scan(w, p, now=NOW + timedelta(hours=13))
+    ev = events(p).set_index("player_text")
+    assert ev.loc["Adam Smith", "source_state"] == "withdrawn" and bool(ev.loc["Adam Smith", "updated_flag"])
+    assert "no longer says" in ev.loc["Adam Smith", "update_note"].lower()
+    assert ev.loc["Juan Garcia", "source_state"] in (None, "current") or pd.isna(ev.loc["Juan Garcia", "source_state"]) or ev.loc["Juan Garcia", "source_state"] == "current"
+
+
+def test_correction_that_changes_the_type_links_old_and_new(tmp_path):
+    p = db_path(tmp_path)
+    w, url, title = one_article_world(["Alpha FC declined contract options for Juan Garcia."])
+    scan(w, p)
+    w.add(url, article(title, ["Alpha FC exercised contract options for Juan Garcia."]))
+    scan(w, p, now=NOW + timedelta(hours=13))
+    ev = events(p)
+    old = ev[ev.event_type == "option_declined"].iloc[0]
+    new = ev[ev.event_type == "option_exercised"].iloc[0]
+    assert old.source_state == "withdrawn" and "option exercised" in (old.correction_note or "").lower()
+    assert "option declined" in (new.correction_note or "").lower() and bool(new.updated_flag)
+    b = brief.build_brief(make_ctx(), today=NOW.date(), path=p, save=False)
+    assert "option_declined" not in json.dumps(b["sections"]), "a withdrawn claim must not be briefed"
+
+
+def test_correction_notice_in_the_text_is_flagged(tmp_path):
+    p = db_path(tmp_path)
+    w, url, title = one_article_world(["Correction: an earlier version of this story named the wrong club.",
+                                       "Alpha FC declined contract options for Juan Garcia."])
+    scan(w, p)
+    e = events(p).query("player_text == 'Juan Garcia'").iloc[0]
+    assert "correction" in (e.correction_note or "").lower()
+
+
+def test_unreadable_articles_back_off_and_are_reported(tmp_path):
+    p = db_path(tmp_path)
+    w = World()
+    url = "https://feed.test/x1"
+    w.add(FEED, rss([("Alpha FC announces roster decisions", url, NOW - timedelta(hours=2), "")]), ctype="application/xml")
+    w.add(url, "boom", status=500)
+    scan(w, p)
+    assert w.calls.count(url) == 3                                  # 1 try + 2 retries inside one scan
+    row = store.query("SELECT health, body_attempts, body_next_try FROM rm_items", path=p).iloc[0]
+    assert row.health == "unread" and row.body_attempts == 1
+    scan(w, p, now=NOW + timedelta(minutes=30))
+    assert w.calls.count(url) == 3, "must not hit the site again before the backoff has passed"
+    for k in range(2, 7):
+        scan(w, p, now=NOW + timedelta(days=3 * k))
+    row = store.query("SELECT health, body_attempts FROM rm_items", path=p).iloc[0]
+    assert row.health == "gave_up" and row.body_attempts >= 6
+    calls = w.calls.count(url)
+    scan(w, p, now=NOW + timedelta(days=60))
+    assert w.calls.count(url) == calls, "gave up means gave up"
+    h = brief.article_health(p)
+    assert h["unread"] and h["unread"][0]["url"] == url and "gave up" in h["unread"][0]["state"]
+    md = brief.build_brief(make_ctx(), today=NOW.date(), path=p, save=False)["markdown"]
+    assert "could not be read" in md.lower() and url in md
+
+
+def test_article_read_but_no_players_found_is_reported_not_silent(tmp_path):
+    p = db_path(tmp_path)
+    w, url, title = one_article_world(["The club thanked its supporters for a memorable season and looks ahead to the offseason."])
+    scan(w, p)
+    it = store.query("SELECT health FROM rm_items", path=p).iloc[0]
+    assert it.health == "no_players_found"
+    h = brief.article_health(p)
+    assert h["no_players"] and h["no_players"][0]["url"] == url
+
+
+def test_failed_article_is_read_when_the_site_recovers(tmp_path):
+    p = db_path(tmp_path)
+    w = World()
+    url = "https://feed.test/r1"
+    w.add(FEED, rss([("Alpha FC declines option on Juan Garcia", url, NOW - timedelta(hours=2), "")]), ctype="application/xml")
+    w.add(url, "down", status=503)
+    scan(w, p)
+    w.add(url, article("Alpha FC declines option on Juan Garcia", ["Alpha FC declined contract options for Juan Garcia."]))
+    scan(w, p, now=NOW + timedelta(hours=5))
+    assert store.query("SELECT health FROM rm_items", path=p).iloc[0, 0] == "ok"
+    assert not events(p).query("player_text == 'Juan Garcia'").empty
+
+
+def test_morning_brief_is_written_even_when_the_scan_is_fresh(tmp_path):
+    from engine.monitor import daily
+    p = db_path(tmp_path)
+    w, url, title = one_article_world(["Alpha FC declined contract options for Juan Garcia."])
+    ctx = make_ctx(["P_GARCIA_A"])
+    evening = NOW.replace(hour=20, minute=0)
+    daily.run_daily(ctx=ctx, path=p, trigger="start", http=w.http(), sources=SRC, now=evening, echo=False)
+    morning = evening + timedelta(hours=11, minutes=15)                 # 07:15, 11h after the evening scan
+    r = daily.run_daily(ctx=ctx, path=p, trigger="schedule", if_stale_hours=12, http=w.http(), sources=SRC, now=morning, echo=False)
+    assert r["scan"] == "skipped-fresh" and r["brief_written"], "a fresh scan must not mean no morning brief"
+    day = (evening + timedelta(days=1)).date()
+    assert store.query("SELECT COUNT(*) FROM rm_briefs WHERE brief_date = ?", [day], path=p).iloc[0, 0] == 1
+    # the schedule itself must not use a threshold that skips the 07:15 run after an evening scan
+    d = schedule.build_plist("/py", "/app", "/home")
+    k = d["ProgramArguments"].index("--if-stale")
+    assert float(d["ProgramArguments"][k + 1]) <= 8
+
+
+def test_uncertain_matches_are_not_repeated_every_morning(tmp_path):
+    p = db_path(tmp_path)
+    w, url, title = one_article_world(["Gamma United declined contract options for Adam Smith."], title="Gamma United announces option decisions")
+    ctx = make_ctx()
+    scan(w, p, ctx)
+    day1 = brief.build_brief(ctx, today=NOW.date(), path=p, save=True)
+    assert day1["uncertain"] and "Adam Smith" in day1["markdown"]
+    day2 = brief.build_brief(ctx, today=NOW.date() + timedelta(days=1), path=p, save=True)
+    assert not day2["uncertain"], "the same waiting question must not be listed again as new"
+    assert day2["uncertain_total"] == 1 and "still waiting" in day2["markdown"].lower()
+
+
+# ================================================================== grammar regressions from the hand-labelled validation
+def _types(text):
+    from engine.monitor.classify import extract_mentions
+    return {m.name: m.event_type for m in extract_mentions(text, None, USLC)}
+
+
+def test_loans_in_are_not_signings_and_extensions_are_not_signings():
+    assert _types("Orange County SC acquires Sydney Wathuta on loan from Colorado Rapids") == {"Sydney Wathuta": "loan_in"}
+    assert _types("Indy Eleven brings aboard Joe Hafferty, Malik Henry-Scott on loan from Lexington SC") == {"Joe Hafferty": "loan_in", "Malik Henry-Scott": "loan_in"}
+    assert _types("Loudoun United signs Giorgi Lomtadze, adds Eddy Davis III on loan") == {"Giorgi Lomtadze": "signing", "Eddy Davis III": "loan_in"}
+    assert _types("Charleston Battery sign Medgy Alexandre to full contract, send on loan to Spokane Velocity FC")["Medgy Alexandre"] == "signing"
+    assert _types("Monterey Bay FC Signs Winger Ilijah Paul to New Contract") == {"Ilijah Paul": "extension"}
+    assert _types("Richmond Kickers sign Nils Seufert to multi-year contract extension") == {"Nils Seufert": "extension"}
+    assert _types("Rhode Island FC signs Cai McLean, Nikolai Pierre to first pro deals") == {"Cai McLean": "signing", "Nikolai Pierre": "signing"}
+    assert _types("Tampa Bay Rowdies acquire forward Jürgen Locadia via transfer from Miami FC") == {"Jürgen Locadia": "signing"}
+    assert _types("Rhode Island FC announces transfer of JJ Williams to Scottish Premiership’s Heart of Midlothian") == {"JJ Williams": "departure"}
+
+
+def test_offseason_list_phrasings_from_other_clubs():
+    t = _types("The club exercised its club option to retain four players, center backs Guillaume Vacter and Beto Ydrach, outside back Perrin Barnes and midfielder Jorge Garcia.")
+    assert set(t.values()) == {"option_exercised"} and len(t) == 4
+    assert _types("The club will also return goalkeeper Kendall McIntosh, defenders Julian Bravo and Neveal Hackshaw.") == {
+        "Kendall McIntosh": "under_contract", "Julian Bravo": "under_contract", "Neveal Hackshaw": "under_contract"}
+    assert _types("Roots announced that defender Kai Greene was out of contract as a free agent.") == {"Kai Greene": "out_of_contract"}
+    r = _types("Midfielder Panos Armenakas and defender Morey Doner had agreed to mutual contract terminations, while forward EJ Johnson had his contract terminated.")
+    assert r == {"Panos Armenakas": "released", "Morey Doner": "released", "EJ Johnson": "released"}
+    assert _types("Midfielders Ethan Bryant and Xavi Gnaulati were previously under contract for the 2026 season.") == {"Ethan Bryant": "under_contract", "Xavi Gnaulati": "under_contract"}
+    assert _types("Wes Fonguck (Ebbsfleet United FC) and forward Tarik Scott (FC Dallas) completed their respective loans with Monterey Bay FC.") == {
+        "Wes Fonguck": "loan_return", "Tarik Scott": "loan_return"}
+    assert _types("Defender Bryan Romero has been recalled from loan by FC Juárez.") == {"Bryan Romero": "loan_return"}
+    assert _types("Rising extended its loan agreement with CD Chivas Guadalajara for Daniel Flores through the end of the season.") == {"Daniel Flores": "loan_in"}
+    assert _types("The club also announced it had agreed to mutually part ways with Dane Jacomen following his season on loan.") == {"Dane Jacomen": "released"}
+    assert set(_types("while also exercising contract buyouts for Sofiane Djeffal and Daniel Barbir.").values()) == {"released"}
+
+
+def test_nicknames_and_suffixes_help_the_name_but_never_replace_the_club():
+    assert name_compat("Gabriel Torres", "Gabi Torres") == "prefix" and name_compat("Joel Garcia Jr.", "J. Garcia") == "initial"
+    m = matcher()
+    assert m.match("Juan Garcia Jr.", "Alpha FC", USLC).uid == "P_GARCIA_A"
+    assert m.match("Juan Garcia", "Zeta FC", USLC).status != "matched"                 # right name, no club: never linked
+    r = m.match("Ryan Flaggd", "Alpha FC", USLC)                                         # one letter off: offered for review, not linked
+    assert r.status == "review" and any("spelt differently" in f for f in r.candidates[0]["flags"])

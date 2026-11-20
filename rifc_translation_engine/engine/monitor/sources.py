@@ -35,6 +35,9 @@ class Source:
     verified: str = ""              # what was actually tested, and when
     note: str = ""
     headline_only: bool = False     # the article body cannot be read (for example redirect links)
+    tracker: bool = False           # an independent transaction tracker: its entries are cross-checks, never confirmations
+    tracker_titles: str | None = None  # regex: which of its posts are transaction lists
+    reliability: str = ""           # what is known about its accuracy and freshness
 
 
 MLS = "MLS"
@@ -55,6 +58,11 @@ DEFAULT_SOURCES: list[Source] = [
            link_exclude=r"/(topics|index|tags)",
            verified="NOT verified: this host was not reachable from the build environment. If it fails here, it is "
                     "shown as failed on the Monitor Status page; add the right feed address in monitor_sources.json."),
+    Source("btn_usl1_tracker", "Beyond the Ninety (independent writer, USL League One transactions)", "rss",
+           "https://beyondthe90.substack.com/feed", "USL League One", tracker=True,
+           tracker_titles=r"transaction|tracker|roster moves|off ?season notebook|signings|making the jump",
+           verified="NOT verified: the host was not reachable from the build environment; the /feed path is the standard Substack one.",
+           reliability="One independent writer. Entries are a cross-check only: they can be late, incomplete or wrong."),
     Source("tds_college_men", "TopDrawerSoccer men's college soccer (page list)", "html_links",
            "https://www.topdrawersoccer.com/search/articles/college/men/cid_21", "College",
            link_include=r"^/college-soccer-articles/[a-z0-9]", link_exclude=r"leaderboard|rankings|preview|boxscore",

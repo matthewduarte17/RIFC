@@ -1,0 +1,3671 @@
+{
+ "generated": "2026-11-20T14:43",
+ "leagues": {
+  "USL Championship": {
+   "club_list_url": "https://www.uslchampionship.com/league-teams",
+   "fetched_at": "2026-11-20T14:43",
+   "n_current": 25,
+   "future": [
+    "Atletico Dallas",
+    "OKC United"
+   ],
+   "transactions_url": "https://www.uslchampionship.com/transactions",
+   "transactions_check": {
+    "checked_at": "2026-11-20T14:43",
+    "http": 200,
+    "robots": "allowed",
+    "ok": true,
+    "note": "",
+    "items": 56,
+    "newest": "2026-11-19"
+   }
+  },
+  "USL League One": {
+   "club_list_url": "https://www.uslleagueone.com/league-teams",
+   "fetched_at": "2026-11-20T14:43",
+   "n_current": 17,
+   "future": [
+    "Cascades FC",
+    "Fort Lauderdale United FC",
+    "Port St. Lucie SC"
+   ],
+   "transactions_url": "https://www.uslleagueone.com/transactions",
+   "transactions_check": {
+    "checked_at": "2026-11-20T14:43",
+    "http": 200,
+    "robots": "allowed",
+    "ok": true,
+    "note": "",
+    "items": 105,
+    "newest": "2026-11-17"
+   }
+  }
+ },
+ "clubs": [
+  {
+   "club_id": "uslc-birmingham-legion-fc",
+   "name": "Birmingham Legion FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.bhmlegion.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/birmingham-legion-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-10-27"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/birmingham-legion-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.bhmlegion.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-brooklyn-fc",
+   "name": "Brooklyn FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.brooklynfootballclub.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/brooklyn-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "The league page links https://www.uslchampionship.com/cbrooklyn-fc-news (404). The league's usual address pattern works: https://www.uslchampionship.com/brooklyn-fc-news.",
+      "items": 6,
+      "newest": "2026-11-13"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/brooklyn-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.brooklynfootballclub.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-charleston-battery",
+   "name": "Charleston Battery",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.charlestonbattery.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/charleston-battery-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-19"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/charleston-battery-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.charlestonbattery.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-colorado-springs-switchbacks-fc",
+   "name": "Colorado Springs Switchbacks FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.switchbacksfc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/colorado-springs-switchbacks-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 106,
+      "newest": "2026-11-11"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/colorado-springs-switchbacks-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 3 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.switchbacksfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-detroit-city-fc",
+   "name": "Detroit City FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.detcityfc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/detroit-city-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 21,
+      "newest": "2026-11-17"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/detroit-city-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.detcityfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-el-paso-locomotive-fc",
+   "name": "El Paso Locomotive FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.eplocomotivefc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/el-paso-locomotive-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-11-13"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/el-paso-locomotive-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.eplocomotivefc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-hartford-athletic",
+   "name": "Hartford Athletic",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.hartfordathletic.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/hartford-athletic-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-11-07"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/hartford-athletic-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.hartfordathletic.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-indy-eleven",
+   "name": "Indy Eleven",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.indyeleven.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/indy-eleven-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 21,
+      "newest": "2026-11-10"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/indy-eleven-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.indyeleven.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-las-vegas-lights-fc",
+   "name": "Las Vegas Lights FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.lasvegaslightsfc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/las-vegas-lights-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 21,
+      "newest": "2026-11-04"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/las-vegas-lights-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.lasvegaslightsfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-lexington-sc",
+   "name": "Lexington SC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://lexsporting.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/lexington-sc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-11-13"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/lexington-sc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://lexsporting.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-loudoun-united-fc",
+   "name": "Loudoun United FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.loudoununitedfc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/loudoun-united-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-10-27"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/loudoun-united-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.loudoununitedfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-louisville-city-fc",
+   "name": "Louisville City FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.loucity.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/louisville-city-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-11-19"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/louisville-city-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.loucity.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-miami-fc",
+   "name": "Miami FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.miamifc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/miami-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-11-11"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/miami-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.miamifc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-monterey-bay-fc",
+   "name": "Monterey Bay FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.montereybayfc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/monterey-bay-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 16,
+      "newest": "2026-10-29"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/monterey-bay-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.montereybayfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-new-mexico-united",
+   "name": "New Mexico United",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.newmexicoutd.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/new-mexico-united-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-11-17"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/new-mexico-united-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.newmexicoutd.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-oakland-roots-sc",
+   "name": "Oakland Roots SC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "http://oaklandrootssc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/oakland-roots-sc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-10-28"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/oakland-roots-sc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "http://oaklandrootssc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-orange-county-sc",
+   "name": "Orange County SC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.orangecountysoccer.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/orange-county-sc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-10-26"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/orange-county-sc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.orangecountysoccer.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-phoenix-rising-fc",
+   "name": "Phoenix Rising FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.phxrisingfc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/phoenix-rising-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-13"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/phoenix-rising-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.phxrisingfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-pittsburgh-riverhounds-sc",
+   "name": "Pittsburgh Riverhounds SC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.riverhounds.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/pittsburgh-riverhounds-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-02"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/pittsburgh-riverhounds-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.riverhounds.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-rhode-island-fc",
+   "name": "Rhode Island FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.rhodeislandfc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/rhode-island-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-11-10"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/rhode-island-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.rhodeislandfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-sacramento-republic-fc",
+   "name": "Sacramento Republic FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.sacrepublicfc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/sacramento-republic-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-19"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/sacramento-republic-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.sacrepublicfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-san-antonio-fc",
+   "name": "San Antonio FC",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.sanantoniofc.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/san-antonio-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-10"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/san-antonio-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.sanantoniofc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-sporting-jax",
+   "name": "Sporting JAX",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.sportingjax.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/sporting-jax-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 16,
+      "newest": "2026-11-17"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/sporting-jax-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.sportingjax.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-tampa-bay-rowdies",
+   "name": "Tampa Bay Rowdies",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.rowdiessoccer.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/tampa-bay-rowdies-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-18"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/tampa-bay-rowdies-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 1 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.rowdiessoccer.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-fc-tulsa",
+   "name": "FC Tulsa",
+   "league": "USL Championship",
+   "status": "current",
+   "website": "https://www.fctulsa.com/",
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslchampionship.com/fc-tulsa-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-19"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslchampionship.com/fc-tulsa-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.fctulsa.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "uslc-atletico-dallas",
+   "name": "Atletico Dallas",
+   "league": "USL Championship",
+   "status": "future",
+   "website": null,
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [],
+   "note": "Listed by the league as a future club: not playing yet."
+  },
+  {
+   "club_id": "uslc-okc-united",
+   "name": "OKC United",
+   "league": "USL Championship",
+   "status": "future",
+   "website": null,
+   "listed_by": "https://www.uslchampionship.com/league-teams",
+   "sources": [],
+   "note": "Listed by the league as a future club: not playing yet."
+  },
+  {
+   "club_id": "usl1-athletic-club-boise",
+   "name": "Athletic Club Boise",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.acboise.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/athletic-club-boise-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-11-14"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/athletic-club-boise-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.acboise.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-av-alta-fc",
+   "name": "AV ALTA FC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.avaltafc.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/av-alta-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-11-03"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/av-alta-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.avaltafc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-charlotte-independence",
+   "name": "Charlotte Independence",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.charlotteindependence.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/charlotte-independence-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 56,
+      "newest": "2026-11-16"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/charlotte-independence-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.charlotteindependence.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-chattanooga-red-wolves-sc",
+   "name": "Chattanooga Red Wolves SC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.chattanoogaredwolves-sc.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/chattanooga-red-wolves-sc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-08"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/chattanooga-red-wolves-sc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 3 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.chattanoogaredwolves-sc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-corpus-christi-fc",
+   "name": "Corpus Christi FC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.corpuscfc.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/corpus-christi-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-10-26"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/corpus-christi-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.corpuscfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-fort-wayne-fc",
+   "name": "Fort Wayne FC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.fortwaynefc.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/fort-wayne-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-11-03"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/fort-wayne-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.fortwaynefc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-forward-madison-fc",
+   "name": "Forward Madison FC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.forwardmadisonfc.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/forward-madison-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-08"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/forward-madison-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 3 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.forwardmadisonfc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-greenville-triumph-sc",
+   "name": "Greenville Triumph SC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.greenvilletriumph.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/greenville-triumph-sc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 26,
+      "newest": "2026-11-19"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/greenville-triumph-sc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.greenvilletriumph.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-one-knoxville-sc",
+   "name": "One Knoxville SC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.oneknoxsc.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/one-knox-sc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 11,
+      "newest": "2026-11-17"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/one-knox-sc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 3 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.oneknoxsc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-fc-naples",
+   "name": "FC Naples",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.fcnaples.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/fc-naples-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-11-11"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/fc-naples-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 3 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.fcnaples.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-new-york-cosmos",
+   "name": "New York Cosmos",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.nycosmos.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/new-york-cosmos-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-11-03"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/new-york-cosmos-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.nycosmos.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-portland-hearts-of-pine",
+   "name": "Portland Hearts of Pine",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.heartsofpine.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/portland-hearts-of-pine-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-10-29"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/portland-hearts-of-pine-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 3 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.heartsofpine.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-richmond-kickers",
+   "name": "Richmond Kickers",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.richmondkickers.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/richmond-kickers-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 106,
+      "newest": "2026-10-28"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/richmond-kickers-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.richmondkickers.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-sarasota-paradise",
+   "name": "Sarasota Paradise",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.sarasotaparadise.us/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/sarasota-paradise-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-11-10"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/sarasota-paradise-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 3 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.sarasotaparadise.us/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-spokane-velocity-fc",
+   "name": "Spokane Velocity FC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.uslspokane.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/spokane-velocity-fc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 16,
+      "newest": "2026-11-08"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/spokane-velocity-fc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.uslspokane.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-union-omaha",
+   "name": "Union Omaha",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.unionomaha.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/union-omaha-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 16,
+      "newest": "2026-11-16"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/union-omaha-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.unionomaha.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-westerchester-sc",
+   "name": "Westerchester SC",
+   "league": "USL League One",
+   "status": "current",
+   "website": "https://www.westchestersc.com/",
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [
+    {
+     "kind": "league_news",
+     "url": "https://www.uslleagueone.com/westchester-sc-news",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": true,
+      "note": "",
+      "items": 6,
+      "newest": "2026-11-06"
+     }
+    },
+    {
+     "kind": "league_roster",
+     "url": "https://www.uslleagueone.com/westchester-sc-roster",
+     "verified": {
+      "checked_at": "2026-11-20T14:43",
+      "http": 200,
+      "robots": "allowed",
+      "ok": false,
+      "note": "Loaded, but no readable player list (only 2 name-like entries). The list is probably drawn by JavaScript, which a plain fetch cannot read: it would need a browser backend, so roster changes here are NOT covered.",
+      "static_players": 0,
+      "js_rendered": true
+     }
+    },
+    {
+     "kind": "club_site",
+     "url": "https://www.westchestersc.com/",
+     "verified": {
+      "checked_at": null,
+      "note": "Listed by the league; not fetched from the build environment. Run 'directory verify'."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "Not discovered yet: needs 'directory verify' on a computer that can reach the club site."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "usl1-cascades-fc",
+   "name": "Cascades FC",
+   "league": "USL League One",
+   "status": "future",
+   "website": null,
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [],
+   "note": "Listed by the league as a future club: not playing yet."
+  },
+  {
+   "club_id": "usl1-fort-lauderdale-united-fc",
+   "name": "Fort Lauderdale United FC",
+   "league": "USL League One",
+   "status": "future",
+   "website": null,
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [],
+   "note": "Listed by the league as a future club: not playing yet."
+  },
+  {
+   "club_id": "usl1-port-st-lucie-sc",
+   "name": "Port St. Lucie SC",
+   "league": "USL League One",
+   "status": "future",
+   "website": null,
+   "listed_by": "https://www.uslleagueone.com/league-teams",
+   "sources": [],
+   "note": "Listed by the league as a future club: not playing yet."
+  },
+  {
+   "club_id": "mlsnp-atlanta-united-ii",
+   "name": "Atlanta United II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-austin-fc-ii",
+   "name": "Austin FC II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-carolina-core",
+   "name": "Carolina Core",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-chattanooga",
+   "name": "Chattanooga",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-chicago-fire-ii",
+   "name": "Chicago Fire II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-cincinnati-ii",
+   "name": "Cincinnati II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-colorado-rapids-ii",
+   "name": "Colorado Rapids II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-columbus-crew-ii",
+   "name": "Columbus Crew II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-connecticut-fc",
+   "name": "Connecticut FC",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-crown-legacy-fc",
+   "name": "Crown Legacy FC",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-houston-dynamo-ii",
+   "name": "Houston Dynamo II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-huntsville-city",
+   "name": "Huntsville City",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-inter-miami-ii",
+   "name": "Inter Miami II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-los-angeles-ii",
+   "name": "Los Angeles II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-minnesota-united-ii",
+   "name": "Minnesota United II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-new-england-ii",
+   "name": "New England II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-new-york-city-ii",
+   "name": "New York City II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-new-york-rb-ii",
+   "name": "New York RB II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-north-texas",
+   "name": "North Texas",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-orlando-city-b",
+   "name": "Orlando City B",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-philadelphia-union-ii",
+   "name": "Philadelphia Union II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-portland-timbers-ii",
+   "name": "Portland Timbers II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-quakes-ii",
+   "name": "Quakes II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-real-monarchs",
+   "name": "Real Monarchs",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-sporting-kc-ii",
+   "name": "Sporting KC II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-st-louis-city-ii",
+   "name": "St. Louis City II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-tacoma-defiance",
+   "name": "Tacoma Defiance",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-the-town",
+   "name": "The Town",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-toronto-ii",
+   "name": "Toronto II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-vancouver-whitecaps-ii",
+   "name": "Vancouver Whitecaps II",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  },
+  {
+   "club_id": "mlsnp-ventura-county",
+   "name": "Ventura County",
+   "league": "MLS Next Pro",
+   "status": "current (from database)",
+   "website": null,
+   "listed_by": "database 2026 player data",
+   "sources": [
+    {
+     "kind": "club_site",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_news",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    },
+    {
+     "kind": "club_roster",
+     "url": null,
+     "verified": {
+      "checked_at": null,
+      "note": "No URL known: run 'directory discover' where mlsnextpro.com is reachable."
+     }
+    }
+   ]
+  }
+ ],
+ "about": "Clubs are read from each league's own club page. 'verified' fields say what was fetched and when; an entry with checked_at null was listed but never fetched from the build environment."
+}

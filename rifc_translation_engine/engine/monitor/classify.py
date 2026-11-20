@@ -22,6 +22,7 @@ EVENT_TYPES = {
     "departure": "Departure / not returning",
     "retirement": "Retirement",
     "loan_out": "Loan out",
+    "loan_in": "Loan in",
     "loan_return": "Loan return / recall",
     "option_exercised": "Option exercised",
     "extension": "Extension / re-signing",
@@ -29,12 +30,15 @@ EVENT_TYPES = {
     "signing": "Signing",
     "club_roster_update": "Club roster update (players not read)",
     "performance": "Performance / recognition",
+    "roster_added": "Roster page: name added (unconfirmed)",
+    "roster_removed": "Roster page: name removed (unconfirmed)",
 }
+UNCONFIRMED_TYPES = {"roster_added", "roster_removed"}
 # What the announcement does for availability. These are readings of the announcement, not facts about the player.
 AVAILABILITY_OPENING = {"option_declined", "released", "out_of_contract", "departure", "loan_return"}
-AVAILABILITY_CLOSING = {"option_exercised", "extension", "under_contract", "signing", "loan_out"}
+AVAILABILITY_CLOSING = {"option_exercised", "extension", "under_contract", "signing", "loan_out", "loan_in"}
 MOVEMENT_TYPES = AVAILABILITY_OPENING | AVAILABILITY_CLOSING | {"retirement"}
-PRIORITY = ["option_declined", "option_exercised", "released", "retirement", "loan_return", "loan_out", "extension",
+PRIORITY = ["option_declined", "option_exercised", "released", "retirement", "loan_return", "loan_in", "loan_out", "extension",
             "under_contract", "signing", "out_of_contract", "departure"]
 
 NAME_PLAIN = "[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’`\\-]+\\.?"
@@ -66,7 +70,10 @@ HARD_STOP = {"usl", "mls", "nwsl", "fc", "sc", "cf", "ii", "championship", "leag
              "thursday", "friday", "saturday", "sunday", "photo", "courtesy", "staff", "follow", "read", "more", "news",
              "head", "coach", "assistant", "director", "general", "manager", "president", "stadium",
              "usa", "ncaa", "division", "draft", "transfer", "portal", "tracker", "update", "updates",
-             "decisions", "moves", "the", "for", "with", "and", "after", "from", "into", "pawtucket"}
+             "decisions", "moves", "the", "for", "with", "and", "after", "from", "into", "pawtucket",
+             "website", "stats", "schedule", "standings", "tickets", "shop", "store", "video", "videos", "photos", "roster", "team",
+             "teams", "record", "regular", "points", "streak", "home", "away", "shootout", "player", "select", "year", "tires", "login",
+             "all-league", "all-conference", "all-star", "all-american", "all-rookie", "all-usl", "one"}
 
 CUES: list[tuple[str, str, re.Pattern]] = []
 
@@ -75,7 +82,7 @@ def _c(kind, typ, pat):
     CUES.append((typ, kind, re.compile(pat, re.I)))
 
 
-_OPT = r"(?:the\s+|their\s+|its\s+|club'?s\s+|his\s+)*(?:contract\s+)?options?"
+_OPT = r"(?:the\s+|their\s+|its\s+|club'?s\s+|his\s+)*(?:club\s+|contract\s+)?options?"
 # names AFTER the cue
 _c("first", "option_declined", rf"\bdeclin\w*\s+(?:to\s+(?:exercise|pick\s+up)\s+)?{_OPT}\s+(?:for|on|of|with)\b")
 _c("first", "option_declined", rf"\b(?:did\s+not|didn'?t|will\s+not|won'?t|not)\s+(?:to\s+)?(?:exercise|pick\s+up)\s+{_OPT}\s+(?:for|on|of)\b")
@@ -86,23 +93,46 @@ _c("first", "released", r"\bmutual(?:ly)?\s+(?:agreed\s+to\s+)?terminat\w*\s+(?:
 _c("first", "released", r"\bmutual\s+contract\s+terminations?\s+(?:for|of|with)\s+")
 _c("first", "retirement", r"\bretirement\s+of\s+")
 _c("first", "retirement", r"\bannounced\s+(?:the\s+)?retire\w*\s+(?:of\s+)?")
-_c("first", "loan_out", r"\bloan(?:s|ed)?\s+(?:out\s+)?(?=[A-Za-z])")
+_c("first", "loan_out", r"\bloan(?:s|ed)\s+(?:out\s+)?(?=[A-Z])")
 _c("first", "loan_return", r"\brecall(?:s|ed)?\s+")
 _c("first", "extension", r"\b(?:re-?sign(?:s|ed)?|extend(?:s|ed)?)\s+(?=\S)")
-_c("first", "extension", r"\bextension\s+(?:for|with|of)\s+")
-_c("first", "extension", r"\bnew\s+(?:\w+-year\s+)?contract\s+(?:for|with)\s+")
+_c("first", "extension", r"\bextensions?\s+(?:for|with|of)\s+")
+_c("first", "extension", r"\bnew\s+(?:\w+-year\s+|multi-?year\s+)?(?:contract|deal)\s+(?:for|with)\s+")
+# "signs X to a new deal / contract extension / multi-year extension": an extension, not a new signing
+_c("first", "extension", r"\b(?:sign(?:s|ed)?|ink(?:s|ed)?|agree[sd]?\s+(?:with|to))\s+(?=[^.]*?\b(?:(?:contract\s+)?extension|new\s+(?:\w+-year\s+|multi-?year\s+)?(?:contract|deal)|"
+   r"multi-?year\s+(?:contract|deal|extension)|(?:two|three|one)-year\s+(?:contract|deal|extension))\b)")
 _c("first", "under_contract", r"\b(?:retain(?:s|ed)?\s+(?=\S)|(?:previously\s+|currently\s+|already\s+)?under\s+contract\s*[–—:\-]\s*)")
-_c("first", "signing", r"\b(?:sign(?:s|ed)?|acquir(?:es?|ed)|add(?:s|ed)|ink(?:s|ed)|land(?:s|ed)|secur(?:es?|ed)|welcom(?:es?|ed)|select(?:s|ed)|trade[sd]?\s+for)\s+(?=\S)")
+_c("first", "signing", r"\b(?:sign(?:s|ed)?|acquir(?:es?|ed)|add(?:s|ed)?|ink(?:s|ed)?|land(?:s|ed)?|secur(?:es?|ed)|welcom(?:es?|ed)|select(?:s|ed)|bring(?:s|ing)?\s+aboard|trade[sd]?\s+for)\s+(?=\S)")
 _c("first", "signing", r"\bsigning\s+of\s+")
+_c("first", "signing", r"\bbolsters?\s+(?:its\s+|their\s+|the\s+)?(?:\w+\s+){0,3}?with\s+")
+_c("first", "loan_in", r"\b(?:acquir(?:es?|ed)|add(?:s|ed)?|bring(?:s|ing)?\s+aboard|sign(?:s|ed)?|land(?:s|ed)?|secur(?:es?|ed)|welcom(?:es?|ed))\s+(?=(?:(?!\b(?:signs?|signed|adds?|added|acquir\w+|inks?|brings?|sends?|sent)\b)[^.])*?\bon\s+(?:a\s+)?loan\b)")
+_c("first", "departure", r"\b(?:announces?|announced)\s+(?:the\s+)?transfer\s+of\s+")
+_c("first", "departure", r"\btransfer\s+of\s+(?=[A-Z])")
+_c("first", "released", r"\bagreed\s+to\s+mutually\s+part\s+ways\s+with\s+")
+_c("first", "released", r"\b(?:exercis\w*|exercising)\s+contract\s+buyouts?\s+(?:for|of|on)\s+")
+_c("first", "option_exercised", rf"\bexercis\w*\s+{_OPT}\s+to\s+(?:retain|keep|return)\s+")
+_c("first", "under_contract", r"\b(?:will\s+)?(?:also\s+)?return\s+(?=(?:goalkeepers?|defenders?|midfielders?|forwards?|strikers?|wingers?|[A-Z]))")
 # names BEFORE the cue
-_c("subject", "out_of_contract", r"\b(?:are|is|were)\s+(?:all\s+|both\s+|currently\s+|now\s+)*out\s+of\s+contract\b")
+_c("subject", "out_of_contract", r"\b(?:are|is|were|was)\s+(?:all\s+|both\s+|currently\s+|now\s+)*out\s+of\s+contract\b")
 _c("subject", "out_of_contract", r"\b(?:are|is)\s+(?:all\s+)?(?:set\s+to\s+)?become\s+free\s+agents?\b")
 _c("subject", "released", r"\b(?:have|has|were|was)\s+(?:all\s+)?(?:been\s+)?(?:released|waived)\b")
 _c("subject", "option_declined", r"\b(?:were|was)\s+not\s+offered\s+(?:new\s+)?(?:contract\s+)?options?\b")
 _c("subject", "departure", r"\b(?:will\s+)?(?:not\s+(?:be\s+)?return(?:ing)?|will\s+not\s+be\s+back|have\s+(?:departed|left)|(?:depart|leave|exit)s?\b)")
 _c("subject", "retirement", r"\b(?:is|are)\s+retiring\b|\bretires?\b")
 _c("subject", "loan_return", r"\breturn(?:s|ed)?\s+from\s+(?:his\s+)?loan\b")
-_c("subject", "under_contract", r"\b(?:are|is)\s+(?:all\s+)?(?:currently\s+)?(?:under\s+contract|set\s+to\s+return|returning)\b")
+_c("subject", "under_contract", r"\b(?:are|is|were|was)\s+(?:all\s+)?(?:currently\s+|previously\s+|already\s+|also\s+)*(?:under\s+contract|set\s+to\s+return|returning)\b")
+_c("subject", "released", r"\bhad\s+agreed\s+to\s+mutual(?:ly)?\s+(?:contract\s+)?terminat\w+")
+_c("subject", "released", r"\bhad\s+(?:his|their)\s+contracts?\s+terminated\b")
+_c("subject", "loan_return", r"\b(?:completed|ended|finished)\s+(?:their|his)\s+(?:respective\s+)?loans?\b")
+_c("subject", "loan_return", r"\b(?:will\s+|have\s+|has\s+)?return(?:ed)?\s+to\s+(?:their|his)\s+(?:respective\s+)?(?:parent\s+)?clubs?\b")
+_c("subject", "loan_return", r"\b(?:has|have)\s+been\s+recalled\s+from\s+loan\b")
+_c("subject", "loan_return", r"\breturned\s+to\s+(?=[A-Z][^.]*\bloan)")
+# "X joins Club [on loan from Y]": the player is the subject. Not when he joins as staff.
+_STAFF_AFTER = r"(?!\s*[^.]*?\bas\s+(?:the\s+|an?\s+)?(?:new\s+)?(?:\w+\s+)?(?:coach|director|manager|analyst|trainer|physio))"
+_c("subject", "loan_in", r"\bjoins?\s+(?=[A-Z][^.]*?\bon\s+(?:a\s+)?loan\b)" + _STAFF_AFTER)
+_c("subject", "signing", r"\bjoins?\s+(?=[A-Z])" + _STAFF_AFTER)
+_c("first", "loan_in", r"\bextend(?:s|ed)?\s+(?:its|the|their)\s+loan(?:\s+agreement)?\s+with\s+[^.]*?\bfor\s+")
+_c("subject", "signing", r"\bunveiled\s+as\s+(?:the\s+)?(?:first|second|third|latest|newest)?\s*signing\b")
 _c("subject", "extension", r"\b(?:re-?sign(?:s|ed)?|extend(?:s|ed)?)\s+(?:with|his\s+contract|through)\b")
 _c("subject", "signing", r"\b(?:sign(?:s|ed)?|join(?:s|ed)?|agree[sd]?\s+(?:to\s+)?(?:terms|a\s+deal))\s+(?:with|to|for)\b")
 

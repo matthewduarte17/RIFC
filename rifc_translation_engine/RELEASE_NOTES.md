@@ -1,3 +1,10 @@
+# Added 20 Nov 2026 (second change): wider coverage, bug fixes, validation
+
+Club directory, optional changedetection.io page watching (own environment, installed only on your say-so), unconfirmed roster-page
+changes, tracker cross-checks, coverage by club, correction/article-health/morning-brief fixes, loan-in and other reader fixes, and
+`VALIDATION_MONITOR.md`. The monitor's tables moved to schema version 2 (backed up first, nothing dropped). `engine/upgrade.py` also carries
+the new tables, the page-watch datastore and `club_sources.json`. No new packages are needed in the app. See README_MONITOR.md.
+
 # Added 20 Nov 2026: recruitment monitor
 
 New pages Recruitment Inbox, Daily Brief and Monitor Status; new package `engine/monitor`; tests in `tests/test_monitor.py`.

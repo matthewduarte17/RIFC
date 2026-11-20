@@ -38,6 +38,41 @@ if not cfg["google_news"]["enabled"]:
     st.info("Google News is off. It would add wide headline coverage, but its robots.txt disallows automated clients and its feed "
             "notice limits use to personal feed readers. To opt in, set google_news.enabled to true in monitor_config.json (in your data folder).")
 
+st.markdown("### Coverage by club")
+st.caption("One row per club: what is configured and verified, the last successful page check, failures, and what is missing. This is a list "
+           "of what we can see, not a claim that every announcement is caught: a club with no verified page or feed is not covered.")
+from engine.monitor import directory as DIR
+cov = DIR.coverage_table()
+if cov.empty:
+    st.info("No club directory yet. Run: python -m engine.monitor directory build")
+else:
+    lg = st.multiselect("League", sorted(cov["League"].unique()), default=sorted(cov["League"].unique()), key="cov_lg")
+    only_gaps = st.checkbox("Only clubs with a failure or something missing", False)
+    v = cov[cov["League"].isin(lg)]
+    if only_gaps:
+        v = v[(v["Missing coverage"] != "none listed") | (v["Failing watches"] > 0) | (v["Problems"] != "")]
+    st.dataframe(v, hide_index=True, width="stretch")
+    st.download_button("Download coverage (CSV)", v.to_csv(index=False), file_name="rifc_monitor_coverage_by_club.csv", mime="text/csv")
+    cur = cov[~cov["Status"].str.startswith("future")]
+    st.caption(f"{len(cur)} current clubs listed. League news page verified for {int(cur['Configured and verified'].str.contains('league news').sum())}; "
+               f"league roster page readable for {int(cur['Configured and verified'].str.contains('league roster').sum())}; "
+               f"club website pages verified for {int(cur['Configured and verified'].str.contains('club news|club roster').sum())}.")
+
+st.markdown("### Page watching (changedetection.io)")
+from engine.monitor import watch as WATCH
+ws = WATCH.status(cfg)
+if not ws["installed"]:
+    st.info("Not installed. It is optional and installs only after you agree. It would use about 550 MB, runs only while a scan runs "
+            "(not a background service), costs nothing, and needs the Mac awake only during the scan. In a terminal: "
+            "python -m engine.monitor watch setup")
+else:
+    st.write(f"Installed ({ws['executable']}); watching is **{'on' if ws['enabled'] else 'off'}**.")
+w = store.query("SELECT watch_id, role, last_status, last_success, consecutive_failures, n_changes, last_error FROM rm_watch ORDER BY watch_id")
+if len(w):
+    df_show(w)
+else:
+    st.caption("No pages are being watched yet.")
+
 st.markdown("### Coverage of players")
 eng = get_engine()
 if eng is not None:

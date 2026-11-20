@@ -90,7 +90,17 @@ q = h1.text_input("Search name or club")
 hide_closing = h2.checkbox("Hide signings, extensions and options exercised for players I do not follow", True,
                            help="These are availability updates. They stay in the data and show for shortlisted players.")
 
+k1, k2 = st.columns([3, 2])
+f_basis = k1.multiselect("Basis", ["announced", "supported", "unconfirmed", "cross-check", "cross-checked"], default=[],
+                         help="announced: a club or league announcement. unconfirmed: a roster page change only. supported: a page change now backed "
+                              "by an announcement. cross-check: an independent tracker entry, never a confirmation.")
+show_withdrawn = k2.checkbox("Show items the source later withdrew or corrected away", False)
+ev["confirmation"] = ev["confirmation"].fillna("announced")
 v = ev
+if not show_withdrawn:
+    v = v[~v["source_state"].eq("withdrawn")]
+if f_basis:
+    v = v[v["confirmation"].isin(f_basis)]
 if f_league: v = v[v["league"].isin(f_league)]
 if f_pos: v = v[v["position_group"].isin(f_pos)]
 if f_type: v = v[v["event_type"].isin(f_type)]
@@ -122,7 +132,10 @@ tbl = pd.DataFrame({
     "Age": v["age_at_season"], "Min": v["minutes"], "Data": v["freshness"],
     "Shortlist": v["shortlisted"].map({True: "Yes", False: ""}),
     "Match": v["match_status"].map({"matched": "Matched", "review": "NEEDS REVIEW", "unmatched": "Lead"}),
-    "Announced": v["announced"], "Sources": v["n_sources"], "Updated": v["updated_flag"].map({True: "UPDATED", False: ""}),
+    "Basis": v["confirmation"].map({"announced": "Announced", "unconfirmed": "UNCONFIRMED", "supported": "Supported", "cross-check": "Tracker (cross-check)",
+                                    "cross-checked": "Cross-checked"}).fillna("Announced"),
+    "Announced": v["announced"], "Sources": v["n_sources"],
+    "Updated": [("WITHDRAWN" if sstate == "withdrawn" else "UPDATED" if u else "") for sstate, u in zip(v["source_state"], v["updated_flag"])],
 }).reset_index(drop=True)
 st.caption("Priority is a reading order from visible factors, not a fit rating. Select a row to see the evidence.")
 sel = st.dataframe(tbl, hide_index=True, width="stretch", on_select="rerun", selection_mode="single-row", key="rm_tbl",
@@ -150,7 +163,20 @@ srcs = r["sources"] or []
 
 st.divider()
 st.markdown(f"## {(card or {}).get('name') or r['player_text']} <span class='muted'>— {r['type_label']}</span>", unsafe_allow_html=True)
-if r["updated_flag"]:
+if (r["confirmation"] or "announced") == "unconfirmed":
+    st.error("UNCONFIRMED: this comes from a change on the club's roster page, not from an announcement. It is not evidence of a signing, a departure "
+             "or availability until an announcement supports it.")
+elif r["confirmation"] == "cross-checked":
+    st.warning("CROSS-CHECKED ONLY: an independent tracker lists a matching move, but no club or league announcement does.")
+elif r["confirmation"] == "cross-check":
+    st.warning("TRACKER ENTRY: from an independent tracker, which can be late, incomplete or wrong. Use as a cross-check only.")
+elif r["confirmation"] == "supported":
+    st.success("Roster page change now supported by an announcement: " + (r["update_note"] or ""))
+if r["source_state"] == "withdrawn":
+    st.error("WITHDRAWN: the source changed and no longer says this. " + (r["correction_note"] or ""))
+elif r["correction_note"]:
+    st.warning(r["correction_note"])
+if r["updated_flag"] and r["source_state"] != "withdrawn":
     st.warning(f"Updated since you last looked: {r['update_note']}")
 if r["prior_decision"]:
     st.info(r["prior_decision"])
