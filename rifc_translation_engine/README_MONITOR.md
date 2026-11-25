@@ -17,8 +17,8 @@ dataset use level, any player ID, note or shortlist entry. It contacts no player
   automatic schedule, AI status and the log.
 
 ## What runs by itself
-1. When you start the app (`start.command`), a scan runs in the background if the last good one is older than 20 hours.
-2. Optionally, a daily scan at a time you choose (default 07:15) using macOS launchd. `start.command` offers this once.
+1. In the app, press **Scan now** on the Recruitment Inbox page. Starting the app does not scan or install anything.
+2. Optionally, a daily scan at a time you choose (default 07:15) using macOS launchd. Not set up by `start.command`; turn it on from the Monitor Status page or with `python -m engine.monitor schedule install`. Some managed Macs block scheduled jobs, so it is off unless you ask for it.
    Or: Monitor Status > Automatic daily scan, or `python -m engine.monitor schedule install`.
    **Does the Mac need to be awake?** The job runs while you are logged in. If the Mac is asleep at the set time, launchd
    runs it when the Mac wakes. If the Mac is off, it runs at your next login. It does not run at a logged-out login

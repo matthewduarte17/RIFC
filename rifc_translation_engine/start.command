@@ -43,12 +43,10 @@ case $? in
   *) stop "The data upgrade did not finish, so your data was left exactly as it was. Send the text above to support." ;;
 esac
 
+# The recruitment monitor does not install anything here and starts nothing in the background.
+# Run a scan from the Recruitment Inbox page in the app. A daily schedule is optional and separate (see README_MONITOR.md).
 export RIFC_TE_HOME="$DATA_HOME"
-
-# Recruitment monitor. Never blocks or stops the app: a failure is written to the log and shown in the app.
 mkdir -p "$DATA_HOME/logs"
-"$VENV/bin/python" -m engine.monitor schedule offer 2>>"$DATA_HOME/logs/monitor.log" || true
-( "$VENV/bin/python" -m engine.monitor run --if-stale 20 --trigger start >> "$DATA_HOME/logs/monitor.log" 2>&1 & ) || true
 
 echo
 echo "Your data: $DATA_HOME/data"
