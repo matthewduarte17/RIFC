@@ -36,12 +36,36 @@ def _safe(url: str) -> str:
     return quote(url, safe=":/?&=%#,;+@~!$'()*[]")
 
 
+_CTX = []
+
+
+def _ssl_context():
+    """Certificates for HTTPS. Python from python.org ships with none, and some work Macs re-sign web traffic with a
+    company certificate that only the macOS keychain knows. So: the macOS keychain (truststore) first, then certifi's
+    bundle, then Python's own default."""
+    if _CTX:
+        return _CTX[0]
+    import ssl
+    ctx = None
+    try:
+        import truststore
+        ctx = truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    except Exception:
+        try:
+            import certifi
+            ctx = ssl.create_default_context(cafile=certifi.where())
+        except Exception:
+            ctx = ssl.create_default_context()
+    _CTX.append(ctx)
+    return ctx
+
+
 def _default_opener(url: str, timeout: float, max_bytes: int):
     url = _safe(url)
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "*/*",
                                                "Accept-Language": "en-US,en;q=0.8"})
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
+        with urllib.request.urlopen(req, timeout=timeout, context=_ssl_context()) as r:
             data = r.read(max_bytes + 1)
             return r.status, dict(r.headers), data[:max_bytes], r.geturl()
     except urllib.error.HTTPError as e:

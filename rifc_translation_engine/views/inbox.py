@@ -41,8 +41,10 @@ if c2.button("Scan now", type="primary", help="Reads all sources now. Takes abou
     from engine.monitor.scan import run_scan
     with st.spinner("Reading sources"):
         s = run_scan(trigger="app", ctx=ctx, echo=False)
-    st.success(f"{s.get('status')}: {s['new_items']} new items, {s['new_events']} new events, {s['updated_events']} updated.") \
-        if s.get("status") in ("ok", "partial") else st.error(f"Scan {s.get('status')}: {s.get('error') or 'see Monitor Status'}")
+    if s.get("status") in ("ok", "partial"):
+        st.success(f"{s.get('status')}: {s['new_items']} new items, {s['new_events']} new events, {s['updated_events']} updated.")
+    else:
+        st.error(f"Scan {s.get('status')}: {s.get('error') or 'see Monitor Status'}")
 if c3.button("Build today's brief"):
     with st.spinner("Writing the brief"):
         B.build_brief(ctx)
