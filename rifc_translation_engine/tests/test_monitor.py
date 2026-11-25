@@ -876,3 +876,110 @@ def test_nicknames_and_suffixes_help_the_name_but_never_replace_the_club():
     assert m.match("Juan Garcia", "Zeta FC", USLC).status != "matched"                 # right name, no club: never linked
     r = m.match("Ryan Flaggd", "Alpha FC", USLC)                                         # one letter off: offered for review, not linked
     assert r.status == "review" and any("spelt differently" in f for f in r.candidates[0]["flags"])
+
+
+# ================================================================== loan-in fixes (validation of 25 Nov 2026)
+def identity_with(spec, pos="CM"):
+    """spec: [(uid, display name, [(club, league, season), ...])]. Builds the same shapes the engine's identity layer has."""
+    pl, rec = [], []
+    for uid, nm, hist in spec:
+        last = sorted(hist, key=lambda h: h[2])[-1]
+        pl.append({"uid": uid, "display_name": nm, "aliases": [nm], "birth_year": 2003.0, "nationality": "US", "height_cm": 180.0, "foot": "right",
+                   "first_season": hist[0][2], "last_season": last[2], "last_season_start": float(last[2]) + .2, "last_club": last[0], "last_league": last[1],
+                   "last_position": pos, "last_partial": False, "n_records": len(hist), "n_seasons": len(hist), "total_minutes": 1500.0,
+                   "identity_level": "Verified", "flags": [], "model_pid": 1, "cluster": 1.0, "leagues": sorted({h[1] for h in hist}),
+                   "clubs": [h[0] for h in hist], "recency": "In the latest data", "recent": True, "seasons_since": 0, "is_rifc_now": False})
+        for club, lg, season in hist:
+            rec.append({"uid": uid, "league": lg, "season": season, "season_start": float(season) + .2, "team": club, "position_group": pos, "minutes": 1500.0,
+                        "matches": 25.0, "current_team": club, "display_only": False, "age_at_season": 22.0, "contract_expires": None})
+    players, records = pd.DataFrame(pl), pd.DataFrame(rec)
+    stints = pd.DataFrame([{"uid": r["uid"], "provider": "Wyscout", "league": r["league"], "season": r["season"], "team": r["team"], "minutes": 1500.0,
+                            "matches": 25.0, "position_raw": "CM", "import_id": 1, "wyscout_team_field": r["team"], "contract_expires": None,
+                            "export_date": "2026-11-05", "season_start": r["season_start"]} for r in rec])
+    idn = SimpleNamespace(players=players, records=records, stints=stints, review=pd.DataFrame(), similar=pd.DataFrame(),
+                          league_latest={USLC: "2026", USL1: "2026"}, latest_season="2026")
+    ctx = Ctx(eng=object(), idn=idn)
+    ctx.roster = Roster(idn)
+    ctx.catalog = ClubCatalog(list(records[["team", "league"]].drop_duplicates().itertuples(index=False)))
+    ctx.shortlist = pd.DataFrame({"key": [], "role": [], "note": [], "added_at": []})
+    return ctx
+
+
+def test_loan_in_wordings():
+    t = _types
+    assert t("Louisville City loan goalkeeper Ryan Schewe from Sporting Kansas City") == {"Ryan Schewe": "loan_in"}
+    assert t("Louisville City loans goalkeeper Ryan Schewe to Indy Eleven") == {"Ryan Schewe": "loan_out"}
+    assert t("Colorado Springs acquires Sam Jones on a season-long loan from Austin FC") == {"Sam Jones": "loan_in"}
+    assert t("Tampa Bay acquires Bo Smith on an emergency loan from Miami FC") == {"Bo Smith": "loan_in"}
+    assert t("Marcus Day arrives on loan from Real Salt Lake") == {"Marcus Day": "loan_in"}, "the lending club is not a player"
+    assert t("Sam Roe heads to Omaha on a season-long loan") == {"Sam Roe": "loan_in"}
+    assert t("Charlotte add Alfredo Midence on loan from Lexington SC") == {"Alfredo Midence": "loan_in"}
+    assert t("Isaac Angking joins Forward Madison FC on loan from Rhode Island FC") == {"Isaac Angking": "loan_in"}
+    assert t("Forster Ajago returned to Real Salt Lake and Kieran Sargeant to Houston Dynamo FC at the conclusion of their loan agreements.") == {
+        "Forster Ajago": "loan_return", "Kieran Sargeant": "loan_return"}
+    assert t("Charleston sign Medgy Alexandre to full contract, send on loan to Spokane Velocity FC") == {"Medgy Alexandre": "signing"}
+
+
+def test_short_club_names_resolve_only_when_unique():
+    cat = ClubCatalog([("Forward Madison", USL1), ("Birmingham Legion", USLC), ("Portland Hearts of Pine", USL1), ("Portland Timbers II", "MLS Next Pro"),
+                       ("Miami", USLC), ("Inter Miami II", "MLS Next Pro"), ("Union Omaha", USL1)])
+    assert cat.lookup("Madison", USL1).name == "Forward Madison" and cat.lookup("Madison", USL1).strength == "short"
+    assert cat.lookup("Birmingham", USL1).name == "Birmingham Legion"            # a loan from a USL Championship club named in a League One headline
+    assert cat.lookup("Omaha").name == "Union Omaha"
+    assert cat.lookup("Portland").strength == "partial", "two Portland clubs: never treated as one"
+    assert cat.lookup("Charlotte", USL1) is None                                    # not a club here (Charlotte FC is not in our data)
+    assert cat.lookup("Miami").strength == "exact"
+
+
+def test_ereku_case_loan_with_short_club_names_links_to_the_right_player():
+    """The whole reading path, as a scan runs it: 'Madison' and 'Birmingham' are short forms and nothing is passed in by hand."""
+    from engine.monitor.scan import read_mentions
+    ctx = identity_with([("P_E", "T. Ereku", [("Birmingham Legion", USLC, "2025"), ("Forward Madison", USL1, "2026")])])
+    m = Matcher(ctx.roster, ctx.catalog)
+    title = "Madison add 21-year-old midfielder Temi Ereku on loan from Birmingham"
+    mentions, club = read_mentions(title, "", headline_type(title), USL1, None, ctx, m)
+    assert [(x.name, x.event_type) for x in mentions] == [("Temi Ereku", "loan_in")] and mentions[0].extra_clubs == ["Birmingham Legion"]
+    x = mentions[0]
+    r = m.match(x.name, x.club_text, USL1, x.position, x.extra_clubs, x.article_clubs)
+    assert r.status == "matched" and r.uid == "P_E" and r.grade == "Strong", r.reasons
+    # a different T. Ereku with no link to either club is not linked by the short names
+    ctx2 = identity_with([("P_X", "T. Ereku", [("Tampa Bay Rowdies", USLC, "2026")])])
+    m2 = Matcher(ctx2.roster, ctx2.catalog)
+    mm, _ = read_mentions(title, "", headline_type(title), USL1, None, ctx2, m2)
+    assert m2.match(mm[0].name, mm[0].club_text, USL1, None, mm[0].extra_clubs, mm[0].article_clubs).status != "matched"
+    # a lending club that is not in the catalogue adds no club and no player
+    mm3, _ = read_mentions("Marcus Day arrives on loan from Real Salt Lake", "", "loan_in", USL1, None, ctx, m)
+    assert [x.name for x in mm3] == ["Marcus Day"]
+
+
+def test_larsen_case_two_similar_players_one_matches_both_clubs():
+    ctx = identity_with([("P_TITER", "B. Titer Larsen", [("Pittsburgh Riverhounds", USLC, "2025")]),
+                         ("P_LARSEN", "B. Larsen", [("Pittsburgh Riverhounds", USLC, "2025"), ("Pittsburgh Riverhounds", USLC, "2026"), ("Greenville Triumph", USL1, "2026")])])
+    m = Matcher(ctx.roster, ctx.catalog)
+    r = m.match("Brigham Larsen", "Greenville Triumph SC", USL1, None, ["Pittsburgh Riverhounds SC"])
+    assert r.status == "matched" and r.uid == "P_LARSEN" and any("both clubs" in x for x in r.reasons), (r.status, r.reasons)
+    assert len(r.candidates) == 2, "the weaker candidate stays visible"
+    # with only ONE club named, the two cannot be told apart: it stays a question for you
+    assert m.match("Brigham Larsen", "Pittsburgh Riverhounds SC", USLC, None, []).status == "review"
+    # a clear tie on both clubs is not broken either
+    ctx2 = identity_with([("P1", "B. Larsen", [("Pittsburgh Riverhounds", USLC, "2026"), ("Greenville Triumph", USL1, "2026")]),
+                          ("P2", "B. Larsen", [("Pittsburgh Riverhounds", USLC, "2026"), ("Greenville Triumph", USL1, "2026")])])
+    assert Matcher(ctx2.roster, ctx2.catalog).match("Brigham Larsen", "Greenville Triumph SC", USL1, None, ["Pittsburgh Riverhounds SC"]).status == "review"
+
+
+def test_position_label_difference_blocks_one_club_but_not_two_named_clubs():
+    from engine.monitor.scan import read_mentions
+    title = "Madison add 21-year-old midfielder Temi Ereku on loan from Birmingham"        # the club calls him a midfielder; the database says CB
+    ctx = identity_with([("P_E", "T. Ereku", [("Birmingham Legion", USLC, "2025"), ("Forward Madison", USL1, "2026")])], pos="CB")
+    m = Matcher(ctx.roster, ctx.catalog)
+    x, _ = read_mentions(title, "", headline_type(title), USL1, None, ctx, m)
+    r = m.match(x[0].name, x[0].club_text, USL1, x[0].position, x[0].extra_clubs, x[0].article_clubs)
+    assert r.status == "matched" and any("Position differs" in t for t in r.reasons), (r.status, r.reasons)
+    # one club only (no 'from' club): the same position difference still sends it to review
+    one = m.match("Temi Ereku", "Forward Madison", USL1, "MID", [], [])
+    assert one.status == "review" and any("Position differs" in f for f in one.candidates[0]["flags"])
+    # a goalkeeper called a forward is still never linked on club evidence alone
+    ctx2 = identity_with([("P_G", "K. Keeper", [("Birmingham Legion", USLC, "2025"), ("Forward Madison", USL1, "2026")])], pos="GK")
+    m2 = Matcher(ctx2.roster, ctx2.catalog)
+    assert m2.match("Kim Keeper", "Madison", USL1, "FWD", ["Birmingham Legion"], []).status == "review"       # goalkeeper vs forward: blocks even with two clubs
+    assert m2.match("Kim Keeper", "Madison", USL1, "GK", ["Birmingham Legion"], []).status == "matched"

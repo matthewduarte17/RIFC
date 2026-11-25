@@ -33,7 +33,7 @@ EXPECT_CLUB = {"Javier Garcia": "NY Cosmos", "Nikolai Pierre": "Rhode Island", "
                "Jorge Garcia": "Pittsburgh Riverhounds", "Joel Garcia Jr.": "Monterey Bay FC", "Marlon Vargas": "New Mexico United", "Sam Gomez": "Monterey Bay FC"}
 LEAGUE = {"dev_transactions": "USL Championship", "holdout_transactions": "USL League One", "holdout_roster_lists": "USL Championship",
           "holdout2_transactions": "USL Championship", "holdout2_controls": "USL Championship", "holdout2_roster_lists": "USL Championship",
-          "untouched_transactions": "USL League One"}
+          "untouched_transactions": "USL League One", "untouched2_transactions": "USL League One", "untouched2_controls": "USL League One"}
 
 
 def main():
@@ -103,7 +103,7 @@ def report(detail):
     L = []
     controls = [x for x in detail if x["truth_type"] == "no_move"]
     L += [f"## negative controls (headlines about awards and previews: no move should be reported)", f"- false alarms: {len([x for x in controls if x['found']])} of {len(controls)}", ""]
-    for sett in ("dev_transactions", "holdout_transactions", "holdout_roster_lists", "holdout2_transactions", "holdout2_roster_lists", "untouched_transactions", "FRESH (holdout2 only)", "ALL"):
+    for sett in ("dev_transactions", "holdout_transactions", "holdout_roster_lists", "holdout2_transactions", "holdout2_roster_lists", "untouched_transactions", "untouched2_transactions", "FRESH (holdout2 only)", "ALL"):
         d = [x for x in detail if x["truth_type"] != "no_move" and (sett == "ALL" or x["set"] == sett or (sett.startswith("FRESH") and x["set"].startswith("holdout2")))]
         if not d:
             continue

@@ -159,3 +159,10 @@ Nothing here is switched on by default and nothing is installed without you sayi
 
 ## Accuracy
 See `VALIDATION_MONITOR.md` (hand-labelled real announcements; what was caught, missed and misclassified, before and after, with the caveats).
+
+
+## Update 25 Nov 2026: loan-ins
+Short club names that could only mean one club ("Madison", "Birmingham", "Omaha") now count as that club, the club a loaned player comes from
+is read from "on loan from X", and when two similar players exist only the one who matches both named clubs is linked. A position label that
+differs between the announcement and the database no longer blocks a link when two named clubs agree (a goalkeeper versus an outfielder
+always blocks). Details and results: `VALIDATION_MONITOR.md`, last section.

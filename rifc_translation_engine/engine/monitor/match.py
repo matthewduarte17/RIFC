@@ -129,6 +129,7 @@ class Candidate:
     club_level: str                 # current | recent | older | partial | none
     reasons: list = field(default_factory=list)
     flags: list = field(default_factory=list)
+    hits: int = 0                   # how many of the clubs named in the announcement are in his recorded history
     last_club: str = ""
     last_league: str = ""
     last_season: str = ""
@@ -218,8 +219,8 @@ class Matcher:
         sk = surname_key(name)
         if not sk:
             return []
-        ref = self.cat.lookup(club_text) if club_text else None
-        extra_refs = [r for r in (self.cat.lookup(x) for x in extra_clubs if x) if r is not None]
+        ref = self.cat.lookup(club_text, league_hint) if club_text else None
+        extra_refs = [r for r in (self.cat.lookup(x, league_hint) for x in extra_clubs if x) if r is not None]
         art_refs = [r for r in (self.cat.lookup(x) for x in article_clubs if x) if r is not None and r.strength == "exact"]
         out = []
         exact_uids = set(self.r.by_surname.get(sk, ()))
@@ -244,10 +245,14 @@ class Matcher:
                               "initial": f"Surname agrees and the database holds the first name as an initial ('{name}' ~ '{dbn}')."}[lvl])
             rank = {"none": 0, "partial": 0, "older": 1, "recent": 2, "current": 3}
             best_ref = None
+            seen_keys = set()
             for rf in ([ref] if ref is not None else []) + extra_refs:
                 cl, why = self.r.club_level(uid, rf.key, league_hint)
                 if rf.strength == "partial" and cl != "none":
                     cl = "partial"
+                if cl in ("current", "recent") and rf.key not in seen_keys:
+                    seen_keys.add(rf.key)
+                    c.hits += 1
                 if best_ref is None or rank[cl] > rank[best_ref[1]]:
                     best_ref = (rf, cl, why)
             if best_ref is not None:
@@ -255,7 +260,8 @@ class Matcher:
                 c.club_level = cl
                 if cl in ("current", "recent", "older"):
                     c.reasons.append(f"Club agrees: {rf.name} is in his recorded history ({why})"
-                                     + ("; named in the same sentence." if rf is not ref else "."))
+                                     + ("; named in the same sentence" if rf is not ref else "")
+                                     + (f"; the announcement says '{club_text if rf is ref else 'a short form'}', which is only {rf.name} in our data" if rf.strength == "short" else "") + ".")
                 elif cl == "partial":
                     c.reasons.append(f"Club only partly agrees ('{club_text}' ~ {rf.name}).")
                 else:
@@ -282,7 +288,12 @@ class Matcher:
             if pos_hint and rec["position"]:
                 ok = rec["position"] in POSITION_COMPAT.get(pos_hint, {rec["position"]})
                 if not ok:
-                    c.flags.append(f"Position differs: announcement says {pos_hint}, database says {rec['position']}.")
+                    msg = f"Position differs: announcement says {pos_hint}, database says {rec['position']}."
+                    hard = (pos_hint == "GK") != (rec["position"] == "GK")      # a goalkeeper vs an outfielder is never a labelling difference
+                    if c.hits >= 2 and not hard:      # both clubs the announcement names are in his history: that outweighs a position label
+                        c.reasons.append(msg + " Noted, not blocking, because both clubs named in the announcement are in his history.")
+                    else:
+                        c.flags.append(msg)
             if uid in variant_uids:
                 c.flags.append("The surname is spelt differently in the database: confirm it is the same person.")
             pl = self.r.players.loc[uid]
@@ -296,7 +307,7 @@ class Matcher:
     def match(self, name: str, club_text: str | None, league_hint: str | None = None, pos_hint: str | None = None, extra_clubs=(), article_clubs=(),
               name_only_review: bool = False) -> MatchResult:
         nk = name_key(name)
-        ref = self.cat.lookup(club_text) if club_text else None
+        ref = self.cat.lookup(club_text, league_hint) if club_text else None
         ck = ref.key if ref else ""
         dk = (nk, ck)
         # 1. what you already decided about this name at this club
@@ -311,6 +322,14 @@ class Matcher:
         if not cands:
             return MatchResult("unmatched", reasons=["No player in the database has a compatible name."])
         good = [c for c in cands if c.club_level in ("current", "recent")]
+        # two similar players at one club: the one who also matches the OTHER club the announcement names (a loan names two)
+        if len(good) > 1:
+            top = max(c.hits for c in good)
+            lead = [c for c in good if c.hits == top]
+            if top >= 2 and len(lead) == 1 and not lead[0].flags:
+                w = lead[0]
+                w.reasons.append(f"Only he matches both clubs named in the announcement; {len(good) - 1} similar player(s) match only one.")
+                return MatchResult("matched", w.uid, "Strong", w.reasons, [w.public()] + [c.public() for c in cands if c.uid != w.uid][:4])
         clean = [c for c in good if not c.flags]
         # 2. one clear candidate: compatible name + club corroboration + nobody else comparable
         if len(good) == 1 and len(clean) == 1 and len(cands) == 1:

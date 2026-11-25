@@ -105,7 +105,9 @@ _c("first", "under_contract", r"\b(?:retain(?:s|ed)?\s+(?=\S)|(?:previously\s+|c
 _c("first", "signing", r"\b(?:sign(?:s|ed)?|acquir(?:es?|ed)|add(?:s|ed)?|ink(?:s|ed)?|land(?:s|ed)?|secur(?:es?|ed)|welcom(?:es?|ed)|select(?:s|ed)|bring(?:s|ing)?\s+aboard|trade[sd]?\s+for)\s+(?=\S)")
 _c("first", "signing", r"\bsigning\s+of\s+")
 _c("first", "signing", r"\bbolsters?\s+(?:its\s+|their\s+|the\s+)?(?:\w+\s+){0,3}?with\s+")
-_c("first", "loan_in", r"\b(?:acquir(?:es?|ed)|add(?:s|ed)?|bring(?:s|ing)?\s+aboard|sign(?:s|ed)?|land(?:s|ed)?|secur(?:es?|ed)|welcom(?:es?|ed))\s+(?=(?:(?!\b(?:signs?|signed|adds?|added|acquir\w+|inks?|brings?|sends?|sent)\b)[^.])*?\bon\s+(?:a\s+)?loan\b)")
+_c("first", "loan_in", r"\b(?:acquir(?:es?|ed)|add(?:s|ed)?|bring(?:s|ing)?\s+aboard|sign(?:s|ed)?|land(?:s|ed)?|secur(?:es?|ed)|welcom(?:es?|ed))\s+(?=(?:(?!\b(?:signs?|signed|adds?|added|acquir\w+|inks?|brings?|sends?|sent)\b)[^.])*?\bon\s+(?:an?\s+)?(?:[\w-]+\s+){0,2}?loan\b)")
+_c("first", "loan_in", r"(?<!\bon )(?<!\ba )(?<!\ban )(?<!\bthe )(?<!\bhis )(?<!\btheir )(?<!-long )(?<!-term )(?<!-year )(?<!emergency )(?<!temporary )\bloans?\s+(?:in\s+)?(?=[^.]*?\bfrom\s+[A-Z])")
+_c("first", "loan_return", r"\band\s+(?=[A-Z][^.]*?\bat\s+the\s+conclusion\s+of\s+(?:their|his)\s+loan)")
 _c("first", "departure", r"\b(?:announces?|announced)\s+(?:the\s+)?transfer\s+of\s+")
 _c("first", "departure", r"\btransfer\s+of\s+(?=[A-Z])")
 _c("first", "released", r"\bagreed\s+to\s+mutually\s+part\s+ways\s+with\s+")
@@ -129,7 +131,8 @@ _c("subject", "loan_return", r"\b(?:has|have)\s+been\s+recalled\s+from\s+loan\b"
 _c("subject", "loan_return", r"\breturned\s+to\s+(?=[A-Z][^.]*\bloan)")
 # "X joins Club [on loan from Y]": the player is the subject. Not when he joins as staff.
 _STAFF_AFTER = r"(?!\s*[^.]*?\bas\s+(?:the\s+|an?\s+)?(?:new\s+)?(?:\w+\s+)?(?:coach|director|manager|analyst|trainer|physio))"
-_c("subject", "loan_in", r"\bjoins?\s+(?=[A-Z][^.]*?\bon\s+(?:a\s+)?loan\b)" + _STAFF_AFTER)
+_c("subject", "loan_in", r"\bjoins?\s+(?=[A-Z][^.]*?\bon\s+(?:an?\s+)?(?:[\w-]+\s+){0,2}?loan\b)" + _STAFF_AFTER)
+_c("subject", "loan_in", r"\b(?:arrives?|moves?|heads?|returns?)\s+(?=[^.]*?\bon\s+(?:an?\s+)?(?:[\w-]+\s+){0,2}?loan\b)")
 _c("subject", "signing", r"\bjoins?\s+(?=[A-Z])" + _STAFF_AFTER)
 _c("first", "loan_in", r"\bextend(?:s|ed)?\s+(?:its|the|their)\s+loan(?:\s+agreement)?\s+with\s+[^.]*?\bfor\s+")
 _c("subject", "signing", r"\bunveiled\s+as\s+(?:the\s+)?(?:first|second|third|latest|newest)?\s*signing\b")
@@ -140,6 +143,9 @@ CLAUSE_SPLIT = re.compile(r",?\s+(?:while|whereas|but|as\s+well\s+as)\s+|;\s+|\s
 REGION_END = re.compile(r"\s(?:to|from|through|until|ahead|following|after|as|who|that|which|for\s+the|for\s+20\d\d|"
                         r"on\s+(?:a|loan)|with\s+(?:the|an?)\b|in\s+20\d\d)\b", re.I)
 SENT_SPLIT = re.compile(r"(?<=[a-z0-9\)\"”’])[.!?]\s+(?=[A-Z])")
+# the club a player comes FROM: "on loan from Birmingham", "via transfer from Phoenix Rising FC". Club names in headlines are often
+# shortened, so the phrase is resolved against the club catalogue instead of being matched as a full name.
+FROM_CLUB = re.compile(r"\b(?:loan|transfer|signed|acquired|joins?|returns?)\s+from\s+((?:[A-Z][\w.&'’-]*\.?(?:\s+|$)){1,4})")
 PHOTO = re.compile(r"\|?\s*Photo\s+(?:courtesy|credit)[^\n|]*", re.I)
 
 STAFF = re.compile(r"\b(head\s+coach|assistant\s+coach|goalkeeper\s+coach|sporting\s+director|general\s+manager|technical\s+director|"
@@ -303,7 +309,13 @@ def extract_mentions(text: str, clubs=None, league_hint: str | None = None, defa
                                      default_club or (found[0].name if len(found) == 1 else None))
                         mt = Mention(name, typ, pos, sent[:320], club_text)
                         # other clubs in the same paragraph can corroborate who he is (for example where he played before)
-                        mt.extra_clubs = [n for n in dict.fromkeys(para_clubs + [c.name for c in clubs_in_clause]) if n != mt.club_text][:4]
+                        from_clubs = []
+                        if clubs is not None:
+                            for ph in FROM_CLUB.findall(sent):
+                                ref = clubs.lookup(ph.strip(), league_hint)
+                                if ref is not None:
+                                    from_clubs.append(ref.name)
+                        mt.extra_clubs = [n for n in dict.fromkeys(from_clubs + para_clubs + [c.name for c in clubs_in_clause]) if n != mt.club_text][:4]
                         mt.article_clubs = [c.name for c in found if c.name != mt.club_text and c.name not in mt.extra_clubs][:6]
                         mentions.append(mt)
     best: dict[str, Mention] = {}

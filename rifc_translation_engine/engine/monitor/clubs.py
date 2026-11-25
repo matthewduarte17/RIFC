@@ -67,7 +67,9 @@ class ClubCatalog:
         k = club_key(text)
         return self.aliases.get(k, k)
 
-    def lookup(self, text) -> ClubRef | None:
+    USL = ("USL Championship", "USL League One")
+
+    def lookup(self, text, league_hint: str | None = None) -> ClubRef | None:
         k = self.canon(text)
         if not k:
             return None
@@ -75,6 +77,14 @@ class ClubCatalog:
             d = self.by_key[k]
             return ClubRef(k, d["name"], tuple(sorted(d["leagues"])), "exact")
         toks = set(k.split())
+        # a short form ("Madison", "Birmingham", "Omaha") that is part of exactly one club's name in the whole catalogue
+        shorter = [c for c, t in self._tok.items() if t and toks < t]          # every club it could mean, reserve teams included
+        if len(shorter) == 1 and not any(toks == t for t in self._tok.values()):
+            d = self.by_key[shorter[0]]
+            ok_league = (league_hint is None or league_hint in d["leagues"] or
+                         (league_hint in self.USL and any(l in self.USL for l in d["leagues"])))
+            if ok_league:
+                return ClubRef(shorter[0], d["name"], tuple(sorted(d["leagues"])), "short")
         reserve = "ii" in toks
         hits = [c for c, t in self._tok.items() if t and (t <= toks or toks <= t) and (("ii" in t) == reserve)
                 and len(t & toks) >= 1]
